@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhoIsFaster.Domain", "WhoIsFaster.Domain\WhoIsFaster.Domain.csproj", "{3A2BDACB-3EF9-4E32-AF15-B25C82C43AE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhoIsFaster.Domain", "WhoIsFaster.Domain\WhoIsFaster.Domain.csproj", "{3A2BDACB-3EF9-4E32-AF15-B25C82C43AE6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhoIsFaster.ApplicationServices", "WhoIsFaster.ApplicationServices\WhoIsFaster.ApplicationServices.csproj", "{122F1324-1BE8-498E-84D8-7BF142FC180B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhoIsFaster.BlazorApp", "WhoIsFaster.BlazorApp\WhoIsFaster.BlazorApp.csproj", "{9A6D523B-BF5C-496E-86F8-077463562D96}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{3A2BDACB-3EF9-4E32-AF15-B25C82C43AE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3A2BDACB-3EF9-4E32-AF15-B25C82C43AE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3A2BDACB-3EF9-4E32-AF15-B25C82C43AE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{122F1324-1BE8-498E-84D8-7BF142FC180B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{122F1324-1BE8-498E-84D8-7BF142FC180B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{122F1324-1BE8-498E-84D8-7BF142FC180B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{122F1324-1BE8-498E-84D8-7BF142FC180B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A6D523B-BF5C-496E-86F8-077463562D96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A6D523B-BF5C-496E-86F8-077463562D96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A6D523B-BF5C-496E-86F8-077463562D96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A6D523B-BF5C-496E-86F8-077463562D96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
