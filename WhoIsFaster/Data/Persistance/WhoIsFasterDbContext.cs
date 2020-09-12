@@ -21,7 +21,6 @@ namespace Data.Persistance
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<Room>().Property(r => r.Timestamp).IsRowVersion();
             modelBuilder.Entity<Room>().HasMany(r => r.RoomPlayers);
             modelBuilder.Entity<Room>().Ignore(r => r.WordList);
         }

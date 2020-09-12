@@ -30,7 +30,6 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         public int TextId { get; private set; }
         public Text Text { get; private set; }
         public bool IsDeleted { get; private set; }
-        public byte[] Timestamp { get; set; }
 
         public Room()
         {
