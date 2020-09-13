@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhoIsFaster.BlazorApp", "Wh
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhoIsFaster.Infrastructure", "WhoIsFaster.Infrastructure", "{8D7A366C-7E59-49B0-8CE9-550BD0520A5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{DE2B3AC3-4757-42B7-AD5D-1B1A662E1E76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{DE2B3AC3-4757-42B7-AD5D-1B1A662E1E76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRNotifications", "SignalRNotifications\SignalRNotifications.csproj", "{AD0FDE02-BFFF-43F9-9C98-8305F7A55F00}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,12 +37,17 @@ Global
 		{DE2B3AC3-4757-42B7-AD5D-1B1A662E1E76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DE2B3AC3-4757-42B7-AD5D-1B1A662E1E76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DE2B3AC3-4757-42B7-AD5D-1B1A662E1E76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD0FDE02-BFFF-43F9-9C98-8305F7A55F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD0FDE02-BFFF-43F9-9C98-8305F7A55F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD0FDE02-BFFF-43F9-9C98-8305F7A55F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD0FDE02-BFFF-43F9-9C98-8305F7A55F00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{DE2B3AC3-4757-42B7-AD5D-1B1A662E1E76} = {8D7A366C-7E59-49B0-8CE9-550BD0520A5A}
+		{AD0FDE02-BFFF-43F9-9C98-8305F7A55F00} = {8D7A366C-7E59-49B0-8CE9-550BD0520A5A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {CCA705E9-FF00-48A5-A2FF-AFCEAE1479AF}
