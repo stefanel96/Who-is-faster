@@ -7,7 +7,7 @@ using System.Text;
 using WhoIsFaster.Domain.Entities;
 using WhoIsFaster.Domain.Entities.RoomAggregate;
 
-namespace Data.Persistance
+namespace WhoIsFaster.Infrastructure.Data.Persistance
 {
     public class WhoIsFasterDbContext : IdentityDbContext<IdentityUser>
     {

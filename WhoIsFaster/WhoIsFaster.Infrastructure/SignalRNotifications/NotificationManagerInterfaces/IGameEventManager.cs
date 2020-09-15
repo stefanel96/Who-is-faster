@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SignalRNotifications.NotificationManagerInterfaces
+namespace WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfaces
 {
     public interface IGameNotificationManager
     {

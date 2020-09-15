@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WhoIsFaster.Domain.Entities;
 using WhoIsFaster.Domain.Interfaces.Repositories;
 
-namespace Data.Persistance.Respositories
+namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
 {
     public class TextRepository : ITextRepository
     {

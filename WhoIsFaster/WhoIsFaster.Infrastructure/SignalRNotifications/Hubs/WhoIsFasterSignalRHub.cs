@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SignalRNotifications.Hubs
+namespace WhoIsFaster.Infrastructure.SignalRNotifications.Hubs
 {
     public class WhoIsFasterSignalRHub : Hub
     {

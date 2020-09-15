@@ -1,12 +1,12 @@
 ﻿using Microsoft.AspNetCore.SignalR;
-using SignalRNotifications.Hubs;
-using SignalRNotifications.NotificationManagerInterfaces;
+using WhoIsFaster.Infrastructure.SignalRNotifications.Hubs;
+using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfaces;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SignalRNotifications.NotificationManagers
+namespace WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagers
 {
     public class GameNotificationManager : IGameNotificationManager
     {

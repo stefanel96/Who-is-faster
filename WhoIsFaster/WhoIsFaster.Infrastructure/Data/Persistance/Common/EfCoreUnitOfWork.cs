@@ -1,4 +1,4 @@
-﻿using Data.Persistance.Respositories;
+﻿using WhoIsFaster.Infrastructure.Data.Persistance.Respositories;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using WhoIsFaster.Domain.Interfaces;
 using WhoIsFaster.Domain.Interfaces.Repositories;
 
-namespace Data.Persistance.Common
+namespace WhoIsFaster.Infrastructure.Data.Persistance.Common
 {
     public class EfCoreUnitOfWork : IUnitOfWork
     {

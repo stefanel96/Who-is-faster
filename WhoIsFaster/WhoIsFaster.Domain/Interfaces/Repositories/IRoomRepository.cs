@@ -9,6 +9,7 @@ namespace WhoIsFaster.Domain.Interfaces.Repositories {
         Task AddRoomAsync (Room room);
         Task DeleteAsync (int id);
         Task<Room> GetByIdAsync (int id);
+        Task<Room> SecureGetByIdAsync(int id);
         Task<List<Room>> GetAllNotStartedPublicRooms();
         Task<Room> GetRandomNotStartedJoinablePublicRoom();
         Task<Room> GetJoinedRoomForUserName(string userName);
