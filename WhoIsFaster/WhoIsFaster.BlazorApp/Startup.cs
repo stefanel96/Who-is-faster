@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using WhoIsFaster.BlazorApp.Data;
 using WhoIsFaster.Domain.Interfaces;
 
 namespace WhoIsFaster.BlazorApp
@@ -41,7 +40,6 @@ namespace WhoIsFaster.BlazorApp
 
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
