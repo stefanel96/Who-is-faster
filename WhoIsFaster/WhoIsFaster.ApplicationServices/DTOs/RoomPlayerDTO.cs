@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using WhoIsFaster.Domain.Entities;
-using WhoIsFaster.Domain.Entities.RoomAggregate;
+﻿using WhoIsFaster.Domain.Entities.RoomAggregate;
 
 namespace WhoIsFaster.ApplicationServices.DTOs
 {
@@ -15,6 +11,7 @@ namespace WhoIsFaster.ApplicationServices.DTOs
         public int IncorrectilyTypedTextEndIndex { get; set; }
         public int CurrentTextIndex { get; set; }
         public string CurrentWord { get; set; }
+        public string CurrentInput { get; set; }
         public bool HasWon { get; set; }
         public bool IsRoomAdmin { get; set; }
 
@@ -32,6 +29,7 @@ namespace WhoIsFaster.ApplicationServices.DTOs
             IncorrectilyTypedTextEndIndex = roomPlayer.IncorrectilyTypedTextEndIndex;
             CurrentTextIndex = roomPlayer.CurrentTextIndex;
             CurrentWord = roomPlayer.CurrentWord;
+            CurrentInput = roomPlayer.CurrentInput;
             HasWon = roomPlayer.HasWon;
             IsRoomAdmin = roomPlayer.IsRoomAdmin;
         }
