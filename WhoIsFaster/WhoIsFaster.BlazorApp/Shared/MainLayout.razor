@@ -1,7 +1,11 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
+<div class="sidebar @Sidebar" @onmouseover="Extend" @onmouseout="Collapse" >
+    <CascadingValue Value="@Collapsed">
+        <CascadingValue Value="@NavTitle">
+            <NavMenu />
+        </CascadingValue>
+    </CascadingValue>
 </div>
 
 <div class="main">
@@ -13,3 +17,20 @@
         @Body
     </div>
 </div>
+
+@code{
+    public bool Collapsed { get; set; } = true;
+    public string NavTitle { get; set; } = "WIF";
+    public string Sidebar { get; set; } = "sidebarCollapsed";
+    void Extend(){
+        Collapsed = false;
+        NavTitle = "WhoIsFaster";
+        Sidebar = "";
+    }
+
+    void Collapse(){
+        Collapsed = true;
+        NavTitle = "WIF";
+        Sidebar = "sidebarCollapsed";
+    }
+}

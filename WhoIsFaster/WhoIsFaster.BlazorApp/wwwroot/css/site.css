@@ -1,7 +1,9 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: 'Anonymous Pro', monospace,'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: rgba(255,255,255,.75);
+    background-color: rgb(25,25,25,.8);  
 }
 
 a, .btn-link {
@@ -47,7 +49,8 @@ app {
 }
 
 .sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    /* background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%); */
+    background-color: rgb(25,25,25,.95);  
 }
 
     .sidebar .top-row {
@@ -60,13 +63,13 @@ app {
 
     .sidebar .oi {
         width: 2rem;
-        font-size: 1.1rem;
+        font-size: 1.3rem;
         vertical-align: text-top;
         top: -2px;
     }
 
     .sidebar .nav-item {
-        font-size: 0.9rem;
+        font-size: 1rem;
         padding-bottom: 0.5rem;
     }
 
@@ -79,7 +82,7 @@ app {
         }
 
         .sidebar .nav-item a {
-            color: #d7d7d7;
+            /* color: #d7d7d7; */
             border-radius: 4px;
             height: 3rem;
             display: flex;
@@ -88,13 +91,13 @@ app {
         }
 
             .sidebar .nav-item a.active {
-                background-color: rgba(255,255,255,0.25);
-                color: white;
+                background-color: rgba(255,255,255,0.1);
+                /* color: white; */
             }
 
             .sidebar .nav-item a:hover {
-                background-color: rgba(255,255,255,0.1);
-                color: white;
+                background-color: rgba(255,255,255,0.05);
+                /* color: white; */
             }
 
 .content {
@@ -155,12 +158,31 @@ app {
         flex-direction: row;
     }
 
+    
+
     .sidebar {
         width: 250px;
         height: 100vh;
         position: sticky;
         top: 0;
+        left: 0;
+        transition: 0.5s;
+        overflow-x: hidden;
+        white-space: nowrap;
     }
+
+    .sidebarCollapsed {
+        width: 90px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+        left: 0;
+        transition: 0.5s;
+        overflow-x: hidden;
+        white-space: nowrap;
+    }
+
+    
 
     .main .top-row {
         position: sticky;
@@ -179,5 +201,10 @@ app {
     .sidebar .collapse {
         /* Never collapse the sidebar for wide screens */
         display: block;
+    }
+    .sidebarCollapsed .nav-item {
+        /* Never collapse the sidebar for wide screens */
+        width: 85px;
+        /* display: block; */
     }
 }
