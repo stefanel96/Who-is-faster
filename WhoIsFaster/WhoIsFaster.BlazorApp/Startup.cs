@@ -14,6 +14,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using WhoIsFaster.Domain.Interfaces;
+using WhoIsFaster.ApplicationServices.Interfaces;
+using WhoIsFaster.ApplicationServices.Services;
+using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagers;
+using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfaces;
+using WhoIsFaster.BlazorApp.BackgroundServices;
+using WhoIsFaster.Infrastructure.SignalRNotifications.Hubs;
 
 namespace WhoIsFaster.BlazorApp
 {
@@ -36,10 +42,18 @@ namespace WhoIsFaster.BlazorApp
             services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<WhoIsFasterDbContext>();
 
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
+            services.AddScoped<IRoomService, RoomService>();
+            services.AddScoped<IRegularUserService, RegularUserService>();
 
+            services.AddSingleton<IGameNotificationManager, GameNotificationManager>();
 
+            services.AddHostedService<GameLoopService>();
+            services.AddSignalR();
+
+            services.AddHttpContextAccessor();
             services.AddRazorPages();
             services.AddServerSideBlazor();
+            services.AddMvc();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -61,10 +75,15 @@ namespace WhoIsFaster.BlazorApp
 
             app.UseRouting();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
+                endpoints.MapHub<WhoIsFasterSignalRHub>("/whoIsFasterSignalRHub");
                 endpoints.MapFallbackToPage("/_Host");
+                endpoints.MapRazorPages();
             });
         }
     }
