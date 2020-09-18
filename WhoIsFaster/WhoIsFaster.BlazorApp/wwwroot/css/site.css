@@ -33,7 +33,8 @@ app {
 }
 
     .main .top-row {
-        background-color: #f7f7f7;
+        /* background-color: #f7f7f7; */
+        background-color: rgb(25,25,25,.8);  
         border-bottom: 1px solid #d6d5d5;
         justify-content: flex-end;
     }
