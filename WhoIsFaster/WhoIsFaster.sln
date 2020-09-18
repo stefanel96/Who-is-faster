@@ -9,11 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhoIsFaster.ApplicationServ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WhoIsFaster.BlazorApp", "WhoIsFaster.BlazorApp\WhoIsFaster.BlazorApp.csproj", "{9A6D523B-BF5C-496E-86F8-077463562D96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "WhoIsFaster.Infrastructure\Data\Data.csproj", "{56616CF4-45C5-4773-838B-CEF417F2688E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "WhoIsFaster.Infrastructure\Data\Data.csproj", "{56616CF4-45C5-4773-838B-CEF417F2688E}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WhoIsFaster.Infrastructure", "WhoIsFaster.Infrastructure", "{0480F551-61AF-4F26-ACF8-4A4F1DA0B026}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SignalRNotifications", "WhoIsFaster.Infrastructure\SignalRNotifications\SignalRNotifications.csproj", "{83E404AE-FE20-4826-BCE6-72A80FF751F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SignalRNotifications", "WhoIsFaster.Infrastructure\SignalRNotifications\SignalRNotifications.csproj", "{83E404AE-FE20-4826-BCE6-72A80FF751F0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
