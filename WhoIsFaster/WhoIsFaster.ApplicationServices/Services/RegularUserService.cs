@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using WhoIsFaster.ApplicationServices.DTOs;
 using WhoIsFaster.ApplicationServices.Interfaces;
+using WhoIsFaster.Domain.Entities;
 using WhoIsFaster.Domain.Interfaces;
 
 namespace WhoIsFaster.ApplicationServices.Services
@@ -16,17 +17,22 @@ namespace WhoIsFaster.ApplicationServices.Services
         }
         public async Task CreateRegularUserAsync(string userName, string firstName, string lastName)
         {
-            throw new NotImplementedException();
+            await _unitOfWork.RegularUserRepository.AddRegularUserAsync(new RegularUser(firstName, lastName, userName));
+            await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<RegularUserDTO> GetRegularUserByUserNameAsync(string userName)
         {
-            throw new NotImplementedException();
+            var regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            return (regularUser == null) ? null : new RegularUserDTO(regularUser);
         }
 
         public async Task UpdateRegularUserAsync(string userName, string firstName, string lastName)
         {
-            throw new NotImplementedException();
+            var regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            regularUser.UpdateFirstName(firstName);
+            regularUser.UpdateLastName(lastName);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }
