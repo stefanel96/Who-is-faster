@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.ViewEngines
+@inject SignInManager<IdentityUser> SignInManager
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
 <!DOCTYPE html>
@@ -7,51 +8,88 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - WhoIsFaster.BlazorApp</title>
-    <link rel="stylesheet" href="~/Identity/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/Identity/css/site.css" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="/css/bootstrap/bootstrap.min.css" />
+    <link href="/css/site.css" rel="stylesheet" />
+    <link href="/css/typewriter.css" rel="stylesheet" />
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-light navbar-toggleable-sm bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" href="~/">WhoIsFaster.BlazorApp</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+    <app>
+        <div class="sidebar sidebarCollapsed" onmouseover="Extend(this)" onmouseout="Collapse(this)">
+            <div class="top-row pl-4 navbar navbar-dark">
+                <a id="navTitle" class="navbar-brand" href="/">WIF</a>
+                    <button class="navbar-toggler" >
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    @{
-                        var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
-                    }
-                    @if (result.Success)
-                    {
-                        await Html.RenderPartialAsync("_LoginPartial");
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
-                            "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
-                            $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
-                    }
-                </div>
             </div>
-        </nav>
-    </header>
+            <div class="">
+                <ul class="nav flex-column">
+                    <li class="nav-item px-3">
+                        <a href="~/" class="nav-link active">
+                            <span class="oi oi-home" aria-hidden="true"></span> 
+                        <span style="visibility: hidden;" class="displayNames">Home</span>            </a>
+                    </li>
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        <li class="nav-item px-3">
+                            <a href="room" class="nav-link">
+                                <span class="oi oi-play-circle" aria-hidden="true"></span>
+                                <span style="visibility: hidden;" class="displayNames">Room</span> 
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    <div class="main">
 
-    <div class="container">
-        <main role="main" class="pb-3">
+        <div class="top-row px-4">
+            <p class="line-1 anim-typewriter">Welcome to WhoIsFaster</p>
+            @{
+                var result = Engine.FindView(ViewContext, "_LoginPartial", isMainPage: false);
+            }
+            @if (result.Success)
+            {
+                await Html.RenderPartialAsync("_LoginPartial");
+            }
+            else
+            {
+                throw new InvalidOperationException("The default Identity UI layout requires a partial view '_LoginPartial' " +
+                    "usually located at '/Pages/_LoginPartial' or at '/Views/Shared/_LoginPartial' to work. Based on your configuration " +
+                    $"we have looked at it in the following locations: {System.Environment.NewLine}{string.Join(System.Environment.NewLine, result.SearchedLocations)}.");
+            }
+    
+        </div>
+
+        <div class="content px-4">
             @RenderBody()
-        </main>
+        </div>
     </div>
-    <footer class="footer border-top text-muted">
+
+    @* <footer class="footer border-top text-muted">
         <div class="container">
             &copy; 2020 - WhoIsFaster.BlazorApp - <a asp-area="" asp-page="Privacy">Privacy</a>
         </div>
-    </footer>
+    </footer> *@
+    </app>
     <script src="~/Identity/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/Identity/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/Identity/js/site.js" asp-append-version="true"></script>
+    <script>
+        function Extend(tag){
+            for (let el of document.querySelectorAll('.displayNames')) el.style.visibility = 'visible';
+            document.getElementById('navTitle').textContent = 'WhoIsFaster';
+            tag.classList.remove('sidebarCollapsed');
+        }
+
+        function Collapse(tag){
+            for (let el of document.querySelectorAll('.displayNames')) el.style.visibility = 'hidden';
+            document.getElementById('navTitle').textContent = 'WIF';
+            tag.classList.add('sidebarCollapsed');
+        }
+
+    </script>
     @RenderSection("Scripts", required: false)
+    
 </body>
 </html>
