@@ -25,10 +25,10 @@ namespace WhoIsFaster.BlazorApp.Pages
         private async Task ValidSubmit()
         {
             await textService.CreateTextAsync(_Text.Source, _Text.TextContent);
-            StateHasChanged();
             saved = true;
             _Text.Source = string.Empty;
             _Text.TextContent = string.Empty;
+            OnInitializedAsync();
 
         }
 
@@ -51,8 +51,8 @@ namespace WhoIsFaster.BlazorApp.Pages
 
         private async void DeleteText(int id)
         {
-            StateHasChanged();
             await textService.DeleteTextAsync(id);
+            OnInitializedAsync();
         }
 
     }

@@ -34,7 +34,7 @@
 
     @if (texts == null)
     {
-        <h1>No texts in the database at the moment.</h1>
+        <h1 style="color:red;">No texts in the database at the moment.</h1>
     }
     else
     {
@@ -42,24 +42,24 @@
 
             <h1 style="text-align: center">List of texts</h1>
             <div id="accordion">
-                @for (var i = 0; i < texts.Count(); i++)
+                @foreach(var text in texts)
                 {
                     <div class="card cardAdmin">
                         <div class="card-header border border-primary rounded" id="headingOne">
                             <h5 class="mb-0">
                                 <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    @texts.ElementAt(i).Source
+                                    @text.Source
                                 </button>
                             </h5>
                         </div>
 
                         <div id="collapseOne" class="collapse border border-top-0 border-primary rounded" aria-labelledby="headingOne" data-parent="#accordion">
                             <div class="card-body">
-                                @texts.ElementAt(i).TextContent
+                                @text.TextContent
 
                             </div>
                             <div class="card-body float-right">
-                                <button type="button" class="btn btn-danger">Delete</button>
+                                <button type="button" @onclick="@(() => DeleteText(text.Id))" class="btn btn-danger">Delete</button>
                             </div>
                         </div>
                     </div>
