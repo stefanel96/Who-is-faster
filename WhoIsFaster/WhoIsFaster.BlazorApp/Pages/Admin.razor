@@ -42,20 +42,20 @@
 
             <h1 style="text-align: center">List of texts</h1>
             <div id="accordion">
-                @for (var i = 0; i < texts.Count(); i++)
+                @foreach(var text in texts)
                 {
                     <div class="card cardAdmin">
-                        <div class="card-header border border-primary rounded" id="headingOne">
+                        <div class="card-header border border-primary rounded" id=@("h" + text.Id)>
                             <h5 class="mb-0">
-                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    @texts.ElementAt(i).Source
+                                <button class="btn btn-link" data-toggle="collapse" data-target=@("#c" + text.Id) aria-expanded="true" aria-controls=@("c" + text.Id)>
+                                    @text.Source
                                 </button>
                             </h5>
                         </div>
 
-                        <div id="collapseOne" class="collapse border border-top-0 border-primary rounded" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div id=@("c" + text.Id) class="collapse border border-top-0 border-primary rounded" aria-labelledby=@("h" + text.Id) data-parent="#accordion">
                             <div class="card-body">
-                                @texts.ElementAt(i).TextContent
+                                @text.TextContent
 
                             </div>
                             <div class="card-body float-right">

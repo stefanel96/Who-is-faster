@@ -5,54 +5,34 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using WhoIsFaster.ApplicationServices;
-using WhoIsFaster.ApplicationServices.DTOs;
 using WhoIsFaster.ApplicationServices.Interfaces;
-using WhoIsFaster.BlazorApp.ViewModels;
 
 namespace WhoIsFaster.BlazorApp.Pages
 {
     public partial class Admin
     {
         [Inject]
-        public ITextService textService { get; set; }
+        public ITextService TextService { get; set; }
         public string Title { get; set; } = "Admin";
-
-        private IEnumerable<TextVM> texts;
 
         public Text _Text { get; set; } = new Text();
         private bool saved;
 
-        private async Task ValidSubmit()
+        private async Task validSubmit()
         {
-            await textService.CreateTextAsync(_Text.Source, _Text.TextContent);
-            StateHasChanged();
             saved = true;
             _Text.Source = string.Empty;
             _Text.TextContent = string.Empty;
-
         }
 
-        private void InvalidSubmit()
+        private void invalidSubmit()
         {
             saved = false;
         }
 
-        private void HideAlert()
+        private void hideAlert()
         {
             saved = false;
-        }
-        protected override async Task OnInitializedAsync()
-        {
-            StateHasChanged();
-            texts = TextVMExtensions.ToTextVMs(await textService.GetAllTextsAsync());
-            StateHasChanged();
-
-        }
-
-        private async void DeleteText(int id)
-        {
-            StateHasChanged();
-            await textService.DeleteTextAsync(id);
         }
 
     }
