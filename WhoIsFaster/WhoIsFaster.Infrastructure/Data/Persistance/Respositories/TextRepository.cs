@@ -37,9 +37,14 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             return await whoIsFasterDbContext.Texts.FirstOrDefaultAsync(t => t.Id == id);
         }
 
+        public async Task<List<Text>> GetAllTexts()
+        {
+            return await whoIsFasterDbContext.Texts.Where(text => text.IsDeleted == false).ToListAsync();
+        }
+
         public async Task<Text> GetRandomTextAsync()
         {
-            return await whoIsFasterDbContext.Texts.OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefaultAsync();
+            return await whoIsFasterDbContext.Texts.Where(text => text.IsDeleted == false).OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefaultAsync();
         }
     }
 }
