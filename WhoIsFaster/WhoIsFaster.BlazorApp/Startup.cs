@@ -39,7 +39,7 @@ namespace WhoIsFaster.BlazorApp
             services.AddDbContext<WhoIsFasterDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<WhoIsFasterDbContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<WhoIsFasterDbContext>();
 
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IRoomService, RoomService>();
@@ -86,6 +86,10 @@ namespace WhoIsFaster.BlazorApp
                 endpoints.MapFallbackToPage("/_Host");
                 endpoints.MapRazorPages();
             });
+
+
+            WhoIsFasterDbContext.CreateRoles(app.ApplicationServices, Configuration).Wait();
+            WhoIsFasterDbContext.CreateAdminAccount(app.ApplicationServices, Configuration).Wait();
         }
     }
 }
