@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WhoIsFaster.ApplicationServices.Interfaces
 {
-    interface ITextService
+    public interface ITextService
     {
     }
 }

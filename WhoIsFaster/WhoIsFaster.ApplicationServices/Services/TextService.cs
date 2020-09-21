@@ -1,7 +1,9 @@
 ﻿
+using WhoIsFaster.ApplicationServices.Interfaces;
+
 namespace WhoIsFaster.ApplicationServices.Services
 {
-    class TextService
+    public class TextService: ITextService
     {
     }
 }

@@ -44,6 +44,7 @@ namespace WhoIsFaster.BlazorApp
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IRegularUserService, RegularUserService>();
+            services.AddScoped<ITextService, TextService>();
 
             services.AddSingleton<IGameNotificationManager, GameNotificationManager>();
 

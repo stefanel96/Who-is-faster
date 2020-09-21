@@ -209,3 +209,13 @@ app {
         /* display: block; */
     }
 }
+
+.cardAdmin {
+    background-color: rgba(25, 25, 25, .8);
+    margin-bottom: 10px;
+}
+
+.card-headerAdmin {
+    border-style: outset;
+    border-color: white;
+}
