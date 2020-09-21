@@ -34,7 +34,7 @@
 
     @if (texts == null)
     {
-        <h1>No texts in the database at the moment.</h1>
+        <h1 style="color:red;">No texts in the database at the moment.</h1>
     }
     else
     {
@@ -59,7 +59,7 @@
 
                             </div>
                             <div class="card-body float-right">
-                                <button type="button" class="btn btn-danger">Delete</button>
+                                <button type="button" @onclick="@(() => DeleteText(text.Id))" class="btn btn-danger">Delete</button>
                             </div>
                         </div>
                     </div>
