@@ -1,127 +1,110 @@
-
 @import url(https://fonts.googleapis.com/css?family=Anonymous+Pro);
 
 
-.line-1{
+.line-1 {
     position: relative;
-    top: 50%;  
+    top: 50%;
     width: 24em;
     margin: 0 auto;
-    border-right: 2px solid rgba(255,255,255,.75);
+    border-right: 2px solid rgba(255, 255, 255, .75);
     font-size: 180%;
     text-align: center;
     white-space: nowrap;
     overflow: hidden;
-    transform: translateY(-50%);    
+    transform: translateY(-50%);
 }
 
-.line-2{
-  position: relative;
-  top: 0%;  
-  width: 24em;
-  margin: 50px 0;
-  border-right: 2px solid rgba(255,255,255,.75);
-  font-size: 140%;
-  text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  transform: translateY(-50%);    
-}
-
-/* Animation */
-.anim-typewriter{
-  animation: typewriter 2s steps(24) 0s 1 normal both,
-             blinkTextCursor 500ms steps(24) infinite normal;
-}
-@keyframes typewriter{
-  from{width: 0;}
-  to{width: 13em;}
-}
-@keyframes blinkTextCursor{
-  from{border-right-color: rgba(255,255,255,.75);}
-  to{border-right-color: transparent;}
-}
-
-
-
-.css-typing p {
-    border-right: .15em solid rgba(255,255,255,.75);
-    font-family: "Courier";
+.line-2 {
+    position: relative;
+    white-space: pre;
+    border-right: 2px solid #222222;
     font-size: 15px;
+    text-align: center;
     white-space: nowrap;
     overflow: hidden;
+    transform: translateY(-50%);
 }
 
-    .css-typing p:nth-child(1) {
-        width: 66em;
-        opacity: 0;
-        animation: type2 2s steps(40);
-        animation-fill-mode: forwards;
-    }
 
-    .css-typing p:nth-child(2) {
-        width: 115em;
-        opacity: 0;
-        animation: type2 4s steps(80);
-        animation-delay: 1.7s;
-        animation-fill-mode: forwards;
-    }
 
-    .css-typing p:nth-child(3) {
-        width: 114em;
-        opacity: 0;
-        animation: type2 3.3s steps(80);
-        animation-delay: 4.7s;
-        animation-fill-mode: forwards;
-    }
-    .css-typing p:nth-child(4) {
-        width: 90em;
-        opacity: 0;
-        animation: type2 2.5s steps(60);
-        animation-delay: 7s;
-        animation-fill-mode: forwards;
-    }
 
-@keyframes type2 {
-    0% {
+/* Animation */
+.anim-typewriter {
+    animation: typewriter 2s steps(24) 0s 1 normal both, blinkTextCursor 500ms steps(24) infinite normal;
+}
+
+.anim-typewriter1 {
+    animation: typewriter1 1s steps(45) 0s 1 normal both, blinkTextCursor 500ms steps(45) 2 normal;
+}
+
+.anim-typewriter2 {
+    animation: typewriter2 1s steps(45) 1s 1 normal both, blinkTextCursor 500ms steps(45) 1s 2 normal;
+}
+
+.anim-typewriter3 {
+    animation: typewriter3 1s steps(45) 2s 1 normal both, blinkTextCursor 500ms steps(45) 2s 2 normal;
+}
+
+.anim-typewriter4 {
+    animation: typewriter4 1s steps(45) 3s 1 normal both, blinkTextCursor 500ms steps(45) 3s infinite normal;
+}
+
+@keyframes typewriter {
+    from {
         width: 0;
     }
 
-    1% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 1;
-        border: none;
+    to {
+        width: 13em;
     }
 }
 
-.center {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: -20%;
-    height: 50%;
-    width: 50%;
+@keyframes typewriter1 {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 37em;
+    }
 }
 
-body[data-aos-delay='9000'] [data-aos], [data-aos][data-aos][data-aos-delay='9000'] {
-    transition-delay: 9000ms;
+@keyframes typewriter2 {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 66em;
+    }
 }
 
-body[data-aos-delay='10000'] [data-aos], [data-aos][data-aos][data-aos-delay='10000'] {
-    transition-delay: 10000ms;
+@keyframes typewriter3 {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 63em;
+    }
 }
 
-body[data-aos-delay='11000'] [data-aos], [data-aos][data-aos][data-aos-delay='11000'] {
-    transition-delay: 11000ms;
+@keyframes typewriter4 {
+    from {
+        width: 0;
+    }
+
+    to {
+        width: 52em;
+    }
 }
 
-body[data-aos-delay='12000'] [data-aos], [data-aos][data-aos][data-aos-delay='12000'] {
-    transition-delay: 12000ms;
-}
+@keyframes blinkTextCursor {
+    from {
+        border-right-color: rgba(255, 255, 255, .75);
+    }
 
-.cont {
-    margin-top: 57px;  
+    to {
+        border-right-color: transparent;
+    }
 }
