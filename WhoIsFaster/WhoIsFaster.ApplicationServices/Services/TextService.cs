@@ -5,6 +5,7 @@ using WhoIsFaster.ApplicationServices.Interfaces;
 using WhoIsFaster.Domain.Interfaces;
 using WhoIsFaster.Domain.Entities;
 using System.Linq;
+using WhoIsFaster.ApplicationServices.Exceptions;
 
 namespace WhoIsFaster.ApplicationServices.Services
 {
@@ -26,13 +27,23 @@ namespace WhoIsFaster.ApplicationServices.Services
         public async Task DeleteTextAsync(int id)
         {
             Text text = await _unitOfWork.TextRepository.GetByIdAsync(id);
+            if (text == null)
+            {
+                throw new WhoIsFasterException($"Text with id: {id} - doesn't exist.");
+            }
             text.Delete();
             await _unitOfWork.SaveChangesAsync();
         }
 
         public async Task<List<TextDTO>> GetAllTextsAsync()
         {
-            return (await _unitOfWork.TextRepository.GetAllTexts()).ToTextDTOs().ToList();
+
+            List<Text> texts = await _unitOfWork.TextRepository.GetAllTexts();
+            if (texts == null)
+            {
+                throw new WhoIsFasterException($"Texts couldn't be gathered from the database.");
+            }
+            return texts.ToTextDTOs().ToList();
         }
     }
 }
