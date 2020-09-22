@@ -41,3 +41,87 @@
   from{border-right-color: rgba(255,255,255,.75);}
   to{border-right-color: transparent;}
 }
+
+
+
+.css-typing p {
+    border-right: .15em solid rgba(255,255,255,.75);
+    font-family: "Courier";
+    font-size: 15px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+    .css-typing p:nth-child(1) {
+        width: 66em;
+        opacity: 0;
+        animation: type2 2s steps(40);
+        animation-fill-mode: forwards;
+    }
+
+    .css-typing p:nth-child(2) {
+        width: 115em;
+        opacity: 0;
+        animation: type2 4s steps(80);
+        animation-delay: 1.7s;
+        animation-fill-mode: forwards;
+    }
+
+    .css-typing p:nth-child(3) {
+        width: 114em;
+        opacity: 0;
+        animation: type2 3.3s steps(80);
+        animation-delay: 4.7s;
+        animation-fill-mode: forwards;
+    }
+    .css-typing p:nth-child(4) {
+        width: 90em;
+        opacity: 0;
+        animation: type2 2.5s steps(60);
+        animation-delay: 7s;
+        animation-fill-mode: forwards;
+    }
+
+@keyframes type2 {
+    0% {
+        width: 0;
+    }
+
+    1% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 1;
+        border: none;
+    }
+}
+
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: -20%;
+    height: 50%;
+    width: 50%;
+}
+
+body[data-aos-delay='9000'] [data-aos], [data-aos][data-aos][data-aos-delay='9000'] {
+    transition-delay: 9000ms;
+}
+
+body[data-aos-delay='10000'] [data-aos], [data-aos][data-aos][data-aos-delay='10000'] {
+    transition-delay: 10000ms;
+}
+
+body[data-aos-delay='11000'] [data-aos], [data-aos][data-aos][data-aos-delay='11000'] {
+    transition-delay: 11000ms;
+}
+
+body[data-aos-delay='12000'] [data-aos], [data-aos][data-aos][data-aos-delay='12000'] {
+    transition-delay: 12000ms;
+}
+
+.cont {
+    margin-top: 57px;  
+}
