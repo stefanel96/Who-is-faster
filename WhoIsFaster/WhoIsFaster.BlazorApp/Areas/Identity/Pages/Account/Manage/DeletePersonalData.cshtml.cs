@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using WhoIsFaster.ApplicationServices.Interfaces;
 
 namespace WhoIsFaster.BlazorApp.Areas.Identity.Pages.Account.Manage
 {
@@ -13,15 +14,18 @@ namespace WhoIsFaster.BlazorApp.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<DeletePersonalDataModel> _logger;
+        private readonly IRegularUserService _regularUserService;
 
         public DeletePersonalDataModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            ILogger<DeletePersonalDataModel> logger)
+            ILogger<DeletePersonalDataModel> logger,
+            IRegularUserService regularUserService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
+            _regularUserService = regularUserService;
         }
 
         [BindProperty]
@@ -65,10 +69,11 @@ namespace WhoIsFaster.BlazorApp.Areas.Identity.Pages.Account.Manage
                     return Page();
                 }
             }
-
+            await _regularUserService.DeleteRegularUserAsync(user.UserName);
+            var regularUser = _regularUserService.GetRegularUserByUserNameAsync(user.UserName);
             var result = await _userManager.DeleteAsync(user);
             var userId = await _userManager.GetUserIdAsync(user);
-            if (!result.Succeeded)
+            if (!result.Succeeded && regularUser == null)
             {
                 throw new InvalidOperationException($"Unexpected error occurred deleting user with ID '{userId}'.");
             }

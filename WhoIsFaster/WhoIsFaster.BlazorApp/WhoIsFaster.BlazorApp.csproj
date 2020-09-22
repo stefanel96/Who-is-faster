@@ -21,9 +21,4 @@
     <ProjectReference Include="..\WhoIsFaster.Infrastructure\Data\Data.csproj" />
     <ProjectReference Include="..\WhoIsFaster.Infrastructure\SignalRNotifications\SignalRNotifications.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="wwwroot\images\" />
-  </ItemGroup>
-
 </Project>

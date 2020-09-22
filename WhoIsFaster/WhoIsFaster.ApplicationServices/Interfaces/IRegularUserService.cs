@@ -11,5 +11,7 @@ namespace WhoIsFaster.ApplicationServices.Interfaces
         Task<RegularUserDTO> GetRegularUserByUserNameAsync(string userName);
         Task UpdateRegularUserAsync(string userName, string firstName, string lastName);
         Task CreateRegularUserAsync(string userName, string firstName, string lastName);
+
+        Task DeleteRegularUserAsync(string userName);
     }
 }

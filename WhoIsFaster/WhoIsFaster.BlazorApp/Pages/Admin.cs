@@ -40,7 +40,8 @@ namespace WhoIsFaster.BlazorApp.Pages
             saved = false;
         }
         protected override async Task OnInitializedAsync()
-        {
+        {   
+            saved = false;
             StateHasChanged();
             texts = TextVMExtensions.ToTextVMs(await textService.GetAllTextsAsync());
             StateHasChanged();

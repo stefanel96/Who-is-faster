@@ -22,6 +22,13 @@ namespace WhoIsFaster.ApplicationServices.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task DeleteRegularUserAsync(string userName)
+        {
+            await _unitOfWork.RegularUserRepository.DeleteRegularUserAsync(userName);
+            await _unitOfWork.SaveChangesAsync();
+        }
+
+
         public async Task<RegularUserDTO> GetRegularUserByUserNameAsync(string userName)
         {
             var regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);

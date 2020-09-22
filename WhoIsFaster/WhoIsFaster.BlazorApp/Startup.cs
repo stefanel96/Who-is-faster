@@ -39,7 +39,11 @@ namespace WhoIsFaster.BlazorApp
             services.AddDbContext<WhoIsFasterDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<WhoIsFasterDbContext>();
+            
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                    .AddDefaultUI()
+                    .AddDefaultTokenProviders()
+                    .AddEntityFrameworkStores<WhoIsFasterDbContext>();
 
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IRoomService, RoomService>();

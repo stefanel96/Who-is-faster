@@ -19,6 +19,8 @@ namespace WhoIsFaster.BlazorApp.Areas.Identity.Pages.Account
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IEmailSender _emailSender;
 
+        [TempData]
+        public string ResetUrl { get; set; }
         public ForgotPasswordModel(UserManager<IdentityUser> userManager, IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -55,13 +57,14 @@ namespace WhoIsFaster.BlazorApp.Areas.Identity.Pages.Account
                     pageHandler: null,
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
-
+                ResetUrl = HtmlEncoder.Default.Encode(callbackUrl);
                 await _emailSender.SendEmailAsync(
                     Input.Email,
                     "Reset Password",
                     $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
 
                 return RedirectToPage("./ForgotPasswordConfirmation");
+                // return Page();
             }
 
             return Page();

@@ -9,5 +9,6 @@ namespace WhoIsFaster.Domain.Interfaces.Repositories {
         Task AddRegularUserAsync (RegularUser regularUser);
         Task<RegularUser> GetByIdAsync (int id);
         Task<RegularUser> GetByUserNameAsync (string userName);
+        Task DeleteRegularUserAsync(string userName);
     }
 }

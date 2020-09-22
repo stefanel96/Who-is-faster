@@ -22,6 +22,13 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             await whoIsFasterDbContext.RegularUsers.AddAsync(regularUser);
         }
 
+        public async Task DeleteRegularUserAsync(string userName)
+        {
+            var regularUser = await whoIsFasterDbContext.RegularUsers.FirstOrDefaultAsync(ru => ru.UserName.Equals(userName));
+            if(regularUser == null) return;
+            whoIsFasterDbContext.Remove(regularUser);
+        }
+
         public async Task<RegularUser> GetByIdAsync(int id)
         {
             return await whoIsFasterDbContext.RegularUsers.FirstOrDefaultAsync(ru => ru.Id == id);
