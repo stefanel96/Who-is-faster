@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using WhoIsFaster.ApplicationServices.DTOs;
+using WhoIsFaster.ApplicationServices.Exceptions;
 using WhoIsFaster.ApplicationServices.Interfaces;
 using WhoIsFaster.Domain.Entities;
 using WhoIsFaster.Domain.Interfaces;
@@ -24,15 +25,25 @@ namespace WhoIsFaster.ApplicationServices.Services
         public async Task<RegularUserDTO> GetRegularUserByUserNameAsync(string userName)
         {
             var regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
-            return (regularUser == null) ? null : new RegularUserDTO(regularUser);
+            if (regularUser == null)
+            {
+                throw new WhoIsFasterException($"User with given username {userName} doesn't exist.");
+            }
+            return new RegularUserDTO(regularUser);
+
         }
 
         public async Task UpdateRegularUserAsync(string userName, string firstName, string lastName)
         {
             var regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            if (regularUser == null)
+            {
+                throw new WhoIsFasterException($"User with given username {userName} doesn't exist.");
+            }
             regularUser.UpdateFirstName(firstName);
             regularUser.UpdateLastName(lastName);
             await _unitOfWork.SaveChangesAsync();
+
         }
     }
 }
