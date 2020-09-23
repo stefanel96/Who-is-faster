@@ -20,6 +20,7 @@ using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagers;
 using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfaces;
 using WhoIsFaster.BlazorApp.BackgroundServices;
 using WhoIsFaster.Infrastructure.SignalRNotifications.Hubs;
+using WhoIsFaster.BlazorApp.EmailServices;
 
 namespace WhoIsFaster.BlazorApp
 {
@@ -45,12 +46,15 @@ namespace WhoIsFaster.BlazorApp
                     .AddDefaultTokenProviders()
                     .AddEntityFrameworkStores<WhoIsFasterDbContext>();
 
+            services.Configure<EmailSettings>(Configuration.GetSection("EmailSettings"));
+
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IRegularUserService, RegularUserService>();
             services.AddScoped<ITextService, TextService>();
 
             services.AddSingleton<IGameNotificationManager, GameNotificationManager>();
+            services.AddTransient<IEmailSender, EmailSender>();
 
             services.AddHostedService<GameLoopService>();
             services.AddSignalR();
