@@ -1,4 +1,8 @@
-﻿@page "/"
+﻿@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@inject NavigationManager Navigation
+
+@page "/"
 
 <p style="margin-top: 50px;" class="line-2 anim-typewriter1">
     'Who is faster' is an online multiplayer browser-based typing game.
@@ -57,3 +61,18 @@
     </div>
 </div>
 
+@code{
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+    
+    protected async override Task OnInitializedAsync()
+    {   
+        var user = (await authenticationStateTask).User;
+            
+        if(user.Identity.IsAuthenticated){
+            if(user.IsInRole("Admin")){
+                Navigation.NavigateTo("admin");
+            }
+        }
+    }
+}

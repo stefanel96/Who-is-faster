@@ -1,0 +1,20 @@
+@using Microsoft.AspNetCore.Http;
+@inject NavigationManager Navigation
+
+@code{
+
+    [Inject]
+    protected NavigationManager NavigationManager { get; set; }
+    [Inject]
+    public IHttpContextAccessor HttpContextAccessor { get; set; }
+    protected override void OnInitialized()
+    {
+        
+        if(HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+            NavigationManager.NavigateTo("",true);
+        else{
+            var returnUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
+            NavigationManager.NavigateTo($"Identity/Account/Login?returnUrl=~/{returnUrl}",true);
+        }
+    }
+}
