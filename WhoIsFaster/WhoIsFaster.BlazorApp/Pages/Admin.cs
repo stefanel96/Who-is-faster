@@ -17,6 +17,7 @@ namespace WhoIsFaster.BlazorApp.Pages
         public string Title { get; set; } = "Admin";
 
         private IEnumerable<TextVM> texts;
+        private IEnumerable<TextVM> hiddenTexts;
 
         public Text _Text { get; set; } = new Text();
         private bool saved;
@@ -44,14 +45,21 @@ namespace WhoIsFaster.BlazorApp.Pages
             saved = false;
             StateHasChanged();
             texts = TextVMExtensions.ToTextVMs(await textService.GetAllTextsAsync());
+            hiddenTexts = TextVMExtensions.ToTextVMs(await textService.GetAllHiddenTextsAsync());
             StateHasChanged();
-
         }
 
         private async void DeleteText(int id)
         {   
             saved = false;
             await textService.DeleteTextAsync(id);
+            await OnInitializedAsync();
+        }
+
+        private async void RecoverText(int id)
+        {
+            saved = false;
+            await textService.RecoverTextAsync(id);
             await OnInitializedAsync();
         }
 

@@ -35,10 +35,32 @@ namespace WhoIsFaster.ApplicationServices.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
+        public async Task RecoverTextAsync(int id)
+        {
+            Text text = await _unitOfWork.TextRepository.GetByIdAsync(id);
+            if (text == null)
+            {
+                throw new WhoIsFasterException($"Text with id: {id} - doesn't exist.");
+            }
+            text.Recover();
+            await _unitOfWork.SaveChangesAsync();
+        }
+
         public async Task<List<TextDTO>> GetAllTextsAsync()
         {
 
             List<Text> texts = await _unitOfWork.TextRepository.GetAllTexts();
+            if (texts == null)
+            {
+                throw new WhoIsFasterException($"Texts couldn't be gathered from the database.");
+            }
+            return texts.ToTextDTOs().ToList();
+        }
+
+        public async Task<List<TextDTO>> GetAllHiddenTextsAsync()
+        {
+
+            List<Text> texts = await _unitOfWork.TextRepository.GetAllHiddenTexts();
             if (texts == null)
             {
                 throw new WhoIsFasterException($"Texts couldn't be gathered from the database.");

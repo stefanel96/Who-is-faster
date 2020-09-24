@@ -42,6 +42,11 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             return await whoIsFasterDbContext.Texts.Where(text => text.IsDeleted == false).ToListAsync();
         }
 
+        public async Task<List<Text>> GetAllHiddenTexts()
+        {
+            return await whoIsFasterDbContext.Texts.Where(text => text.IsDeleted == true).ToListAsync();
+        }
+
         public async Task<Text> GetRandomTextAsync()
         {
             return await whoIsFasterDbContext.Texts.Where(text => text.IsDeleted == false).OrderBy(r => Guid.NewGuid()).Take(1).FirstOrDefaultAsync();

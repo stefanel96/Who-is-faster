@@ -13,5 +13,7 @@ namespace WhoIsFaster.Domain.Interfaces.Repositories
         Task<Text> GetByIdAsync(int id);
         Task<Text> GetRandomTextAsync();
         Task<List<Text>> GetAllTexts();
+
+        Task<List<Text>> GetAllHiddenTexts();
     }
 }

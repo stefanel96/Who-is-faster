@@ -31,39 +31,105 @@
     </div>
 
     <div class="col-1"></div>
-        <div class="col-6">
-            @if (texts == null || texts.Count() == 0)
-            {   
-                <div class="alert alert-warning" role="alert">
-                    No texts in the database at the moment.
-                </div>
-            }else
-            {
-                <h1 style="text-align: center">List of texts</h1>
-                <div id="accordion" @onclick="@HideAlert">
-                    @foreach(var text in texts)
-                    {
-                        <div class="card cardAdmin">
-                            <div class="card-header border border-primary rounded" id=@("h" + text.Id)>
-                                <h5 class="mb-0">
-                                    <button class="btn btn-link" data-toggle="collapse" data-target=@("#c" + text.Id) aria-expanded="true" aria-controls=@("c" + text.Id)>
-                                        @text.Source
-                                    </button>
-                                </h5>
+    <div class="col-6">
+        @if (texts == null || texts.Count() == 0)
+        {
+            <div class="alert alert-warning" role="alert">
+                No texts in the database at the moment.
+            </div>
+        }
+        else
+        {
+            <h1 style="text-align: center">List of texts</h1>
+
+            <div id="accordionTexts" @onclick="@HideAlert">
+                <div class="card cardAdmin">
+                    <div class="card-header rounded" id="UsedTextsHeader">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" style='text-decoration:none; font-size : 20px' data-toggle="collapse" data-target="#UsedTextsCollapse" aria-expanded="false" aria-controls="UsedTextsCollapse">
+                                Texts in use
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="UsedTextsCollapse" class="collapse " aria-labelledby="UsedTextsHeader" data-parent="#accordionTexts">
+                        <div class="card-body">
+                            <div id="accordion" @onclick="@HideAlert">
+                                @foreach (var text in texts)
+                                {
+                                    <div class="card cardAdmin">
+                                        <div class="card-header " id=@("h" + text.Id)>
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link" style='text-decoration:none; font-size: 18px' data-toggle="collapse" data-target=@("#c" + text.Id) aria-expanded="false" aria-controls=@("c" + text.Id)>
+                                                    @text.Source
+                                                </button>
+                                            </h5>
+                                        </div>
+
+                                        <div id=@("c" + text.Id) class="collapse" aria-labelledby=@("h" + text.Id) data-parent="#accordion">
+                                            <div class="card-body">
+                                                @text.TextContent
+
+                                            </div>
+                                            <div class="card-body float-right">
+                                                <button type="button" @onclick="@(()=>DeleteText(text.Id))" class="btn btn-danger">Delete</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
                             </div>
 
-                            <div id=@("c" + text.Id) class="collapse border border-top-0 border-primary rounded" aria-labelledby=@("h" + text.Id) data-parent="#accordion">
-                                <div class="card-body">
-                                    @text.TextContent
-
-                                </div>
-                                <div class="card-body float-right">
-                                    <button type="button" @onclick="@(()=>DeleteText(text.Id))" class="btn btn-danger">Delete</button>
-                                </div>
-                            </div>
                         </div>
-                    }
+
+                    </div>
                 </div>
-            }
-        </div>
+
+
+
+                <div class="card cardAdmin">
+                    <div class="card-header" id="HiddenTextsHeader">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" style='text-decoration:none; font-size : 20px' data-toggle="collapse" data-target="#HiddenTextsCollapse" aria-expanded="false" aria-controls="HiddenTextsCollapse">
+                                Hidden texts
+                            </button>
+                        </h5>
+                    </div>
+
+                    <div id="HiddenTextsCollapse" class="collapse" aria-labelledby="HiddenTextsHeader" data-parent="#accordionTexts">
+                        <div class="card-body">
+                            <div id="accordion" @onclick="@HideAlert">
+                                @foreach (var text in hiddenTexts)
+                                {
+                                    <div class="card cardAdmin">
+                                        <div class="card-header" id=@("h" + text.Id)>
+                                            <h5 class="mb-0">
+                                                <button class="btn btn-link" style='text-decoration:none; font-size: 18px' data-toggle="collapse" data-target=@("#c" + text.Id) aria-expanded="false" aria-controls=@("c" + text.Id)>
+                                                    @text.Source
+                                                </button>
+                                            </h5>
+                                        </div>
+
+                                        <div id=@("c" + text.Id) class="collapse" aria-labelledby=@("h" + text.Id) data-parent="#accordion">
+                                            <div class="card-body">
+                                                @text.TextContent
+
+                                            </div>
+                                            <div class="card-body float-right">
+                                                <button type="button" @onclick="@(()=>RecoverText(text.Id))" class="btn btn-success">Recover</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+        }
+    </div>
 </div>
