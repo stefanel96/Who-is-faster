@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Configuration;
 using WhoIsFaster.BlazorApp.EmailServices;
 
@@ -12,7 +13,8 @@ namespace WhoIsFaster.BlazorApp.Pages {
         public IConfiguration Configuration { get; set; }
         [Inject]
         public IEmailSender EmailSender { get; set; }
-
+        [Inject]
+        public NavigationManager Navigation { get; set; }
         public ContactFormModel _ContactFormModel { get; set; } = new ContactFormModel();
 
         private bool displaySendAlert { get; set; } = false;
@@ -30,6 +32,19 @@ namespace WhoIsFaster.BlazorApp.Pages {
             displaySendAlert = false;
         }
 
+        [CascadingParameter]
+        private Task<AuthenticationState> authenticationStateTask { get; set; }
+        
+        protected async override Task OnInitializedAsync()
+        {   
+            var user = (await authenticationStateTask).User;
+                
+            if(user.Identity.IsAuthenticated){
+                if(user.IsInRole("Admin")){
+                    Navigation.NavigateTo("admin");
+                }
+            }
+        }
 
     }
 

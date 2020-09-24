@@ -22,8 +22,20 @@
                 <Authorized>
                     <li class="nav-item px-3">
                         <NavLink class="nav-link" href="room">
-                            <span class="oi oi-play-circle" aria-hidden="true"></span>
-                            @if(!Collapsed){ <span>Room</span>}
+                            <span class="oi oi-globe" aria-hidden="true"></span>
+                            @if(!Collapsed){ <span>Public Room</span>}
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="party">
+                            <span class="oi oi-pulse" aria-hidden="true"></span>
+                            @if(!Collapsed){ <span>Party Room</span>}
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="practice">
+                            <span class="oi oi-book" aria-hidden="true"></span>
+                            @if(!Collapsed){ <span>Practice Room</span>}
                         </NavLink>
                     </li>
                 </Authorized>

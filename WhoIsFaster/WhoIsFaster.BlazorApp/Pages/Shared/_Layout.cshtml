@@ -1,8 +1,10 @@
 ﻿@using Microsoft.AspNetCore.Hosting
 @using Microsoft.AspNetCore.Mvc.ViewEngines
+@using Microsoft.AspNetCore.Http;
 @inject SignInManager<IdentityUser> SignInManager
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
+@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,31 +26,51 @@
             </div>
             <div class="">
                 <ul class="nav flex-column">
-                    <li class="nav-item px-3">
-                        <a href="~/" class="nav-link active">
-                            <span class="oi oi-home" aria-hidden="true"></span> 
-                        <span style="visibility: hidden;" class="displayNames">Home</span>            </a>
-                    </li>
-                    @if (SignInManager.IsSignedIn(User))
+                    @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin"))
                     {
                         <li class="nav-item px-3">
-                            <a href="~/room" class="nav-link">
-                                <span class="oi oi-play-circle" aria-hidden="true"></span>
-                                <span style="visibility: hidden;" class="displayNames">Room</span> 
-                            </a>
-                        </li>
+                            <a href="~/" class="nav-link active">
+                                <span class="oi oi-home" aria-hidden="true"></span> 
+                            <span style="visibility: hidden;" class="displayNames">Home</span>            </a>
+                        </li>   
+                    }
+                    @if (SignInManager.IsSignedIn(User))
+                    {
+                        @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
+                            <li class="nav-item px-3">
+                                <a href="~/room" class="nav-link">
+                                    <span class="oi oi-globe" aria-hidden="true"></span>
+                                    <span style="visibility: hidden;" class="displayNames">Public Room</span> 
+                                </a>
+                            </li>
+                            <li class="nav-item px-3">
+                                <a href="~/party" class="nav-link">
+                                    <span class="oi oi-pulse" aria-hidden="true"></span>
+                                    <span style="visibility: hidden;" class="displayNames">Party Room</span> 
+                                </a>
+                            </li>
+                            <li class="nav-item px-3">
+                                <a href="~/practice" class="nav-link">
+                                    <span class="oi oi-book" aria-hidden="true"></span>
+                                    <span style="visibility: hidden;" class="displayNames">Practice Room</span> 
+                                </a>
+                            </li>
+                        }else{
+                            <li class="nav-item px-3">
+                                <a href="~/admin" class="nav-link">
+                                    <span class="oi oi-code" aria-hidden="true"></span>
+                                    <span style="visibility: hidden;" class="displayNames">Admin</span> 
+                                </a>
+                            </li>
+                        }
+                    }
+                    @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
                         <li class="nav-item px-3">
-                            <a href="~/admin" class="nav-link">
-                                <span class="oi oi-code" aria-hidden="true"></span>
-                                <span style="visibility: hidden;" class="displayNames">Admin</span> 
-                            </a>
+                            <a href="~/contact" class="nav-link">
+                                <span class="oi oi-info" aria-hidden="true"></span> 
+                            <span style="visibility: hidden;" class="displayNames">Contact</span>            </a>
                         </li>
                     }
-                    <li class="nav-item px-3">
-                        <a href="~/contact" class="nav-link">
-                            <span class="oi oi-info" aria-hidden="true"></span> 
-                        <span style="visibility: hidden;" class="displayNames">Contact</span>            </a>
-                    </li>
                 </ul>
             </div>
         </div>
