@@ -46,7 +46,10 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             Room room = await whoIsFasterDbContext.Rooms.Include(r => r.RoomPlayers)
                 .Include(r => r.Text)
                 .FirstOrDefaultAsync(r => r.Id == id);
-            room.SetWordList();
+            if (room != null)
+            {
+                room.SetWordList();
+            }
             return room;
         }
 
@@ -56,7 +59,10 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
                 .Include(r => r.Text)
                 .FirstOrDefaultAsync(r => r.Id == id);
             await whoIsFasterDbContext.Entry(room).ReloadAsync();
-            room.SetWordList();
+            if (room != null)
+            {
+                room.SetWordList();
+            }
             return room;
         }
 
@@ -67,7 +73,10 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
                            .Include(r => r.Text)
                            .Where(r => r.RoomPlayers.Any(rp => rp.UserName == userName))
                            .FirstOrDefaultAsync();
-            room.SetWordList();
+            if (room != null)
+            {
+                room.SetWordList();
+            }
             return room;
         }
 
@@ -84,7 +93,11 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
                             .OrderBy(r => Guid.NewGuid())
                             .Take(1)
                             .FirstOrDefaultAsync();
-            room.SetWordList();
+            if (room != null)
+            {
+                room.SetWordList();
+            }
+            
             return room;
         }
     }

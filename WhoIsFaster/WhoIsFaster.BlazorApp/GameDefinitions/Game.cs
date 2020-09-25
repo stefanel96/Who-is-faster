@@ -128,6 +128,7 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
         public async Task<Room> UpdateNonStartedRoom(Room room)
         {
             Room savedRoom = await _unitOfWork.RoomRepository.SecureGetByIdAsync(room.Id);
+            await _notificationManager.SendRoomInfoToGroup(room.Id.ToString(), JsonSerializer.Serialize(new RoomDTO(room)));
             if (savedRoom.ShouldStart())
             {
                 savedRoom.Start();
