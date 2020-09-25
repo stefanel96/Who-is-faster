@@ -10,7 +10,7 @@ namespace WhoIsFaster.ApplicationServices.Interfaces
     public interface IRoomService
     {
         Task<int> CreateAndJoinPracticeRoomAsync(string userName);
-        Task<int> JoinOrCreateRoomAsync(string userName);
+        Task<RoomResponseDTO> JoinOrCreateRoomAsync(string userName);
         Task<int> CreateAndJoinPartyRoomAsync(string userName);
         Task<int> JoinPartyRoomAsync(string userName, int roomId);
         Task<RoomDTO> GetRoomByIdAsync(int id);

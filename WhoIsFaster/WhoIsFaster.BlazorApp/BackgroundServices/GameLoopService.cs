@@ -25,10 +25,9 @@ namespace WhoIsFaster.BlazorApp.BackgroundServices
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            IUnitOfWork unitOfWork = _serviceProvider.CreateScope().ServiceProvider.GetService<IUnitOfWork>();
             IGameNotificationManager gameNotificationManager = _serviceProvider.GetService<IGameNotificationManager>();
             _gameLoop = new GameLoop(100);
-            Thread t = new Thread(() => _gameLoop.Start(unitOfWork, gameNotificationManager).ConfigureAwait(false));
+            Thread t = new Thread(() => _gameLoop.Start(_serviceProvider, gameNotificationManager).ConfigureAwait(false));
             t.Start();
 
             return Task.CompletedTask;

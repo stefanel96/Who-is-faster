@@ -19,9 +19,9 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
         public int LoopIntervalMiliseconds { get; private set; }
         public Game Game { get; set; }
 
-        public async Task Start(IUnitOfWork unitOfWork, IGameNotificationManager gameNotificationManager)
+        public async Task Start(IServiceProvider serviceProvider, IGameNotificationManager gameNotificationManager)
         {
-            Game.SetUnitOfWork(unitOfWork);
+            Game.SetServiceProvider(serviceProvider);
             Game.SetNotificationManager(gameNotificationManager);
             Running = true;
             DateTime previouseLoopTime = DateTime.Now;
@@ -34,9 +34,6 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
                     await Game.Instance.Update();
                 }
             }
-            
-
-            unitOfWork?.Dispose();
         }
 
         public void Stop()

@@ -114,9 +114,10 @@ namespace WhoIsFaster.ApplicationServices.Services
             return new RoomDTO(room);
         }
 
-        public async Task<int> JoinOrCreateRoomAsync(string userName)
+        public async Task<RoomResponseDTO> JoinOrCreateRoomAsync(string userName)
         {
             RegularUser regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            bool isNew = false;
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");
@@ -135,7 +136,7 @@ namespace WhoIsFaster.ApplicationServices.Services
                     throw new WhoIsFasterException($"There are no texts in the database.");
                 }
 
-                room = new Room(4, 2, text, 1200, 5, RoomType.Practice);
+                room = new Room(4, 2, text, 1200, 5, RoomType.Public);
                 await _unitOfWork.RoomRepository.AddRoomAsync(room);
             }
 
@@ -144,7 +145,7 @@ namespace WhoIsFaster.ApplicationServices.Services
 
             await _unitOfWork.SaveChangesAsync();
 
-            return room.Id;
+            return new RoomResponseDTO(room.Id, isNew);
 
         }
 

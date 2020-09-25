@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -19,16 +20,15 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
     {
 
         private static readonly Game instance = new Game();
-        private IUnitOfWork _unitOfWork;
         private IGameNotificationManager _notificationManager;
-
+        private IServiceProvider _serviceProvider;
         static Game() {}
 
         private Game() {}
 
-        public void SetUnitOfWork(IUnitOfWork unitOfWork)
+        public void SetServiceProvider(IServiceProvider serviceProvider)
         {
-            _unitOfWork = unitOfWork;
+            _serviceProvider = serviceProvider;
         }
         public void SetNotificationManager(IGameNotificationManager notificationManager)
         {
@@ -90,20 +90,23 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
 
         public async Task EndRoom(Room room)
         {
-            Room savedRoom = await _unitOfWork.RoomRepository.SecureGetByIdAsync(room.Id);
-            savedRoom.UpdateRoom(room);
-
-            RegularUser regularUser;
-            foreach (RoomPlayer roomPlayer in savedRoom.RoomPlayers)
+            using (IUnitOfWork unitOfWork = _serviceProvider.CreateScope().ServiceProvider.GetService<IUnitOfWork>())
             {
-                regularUser = await _unitOfWork.RegularUserRepository.GetByIdAsync(roomPlayer.RegularUserId);
-                regularUser.UpdatePlayerStats(roomPlayer.WordsPerMinute, roomPlayer.HasWon);
-                regularUser.LeaveRoom();
-                string value;
-                Players.TryRemove(roomPlayer.UserName, out value);
-            }
+                Room savedRoom = await unitOfWork.RoomRepository.SecureGetByIdAsync(room.Id);
+                savedRoom.UpdateRoom(room);
 
-            await _unitOfWork.SaveChangesAsync();
+                RegularUser regularUser;
+                foreach (RoomPlayer roomPlayer in savedRoom.RoomPlayers)
+                {
+                    regularUser = await unitOfWork.RegularUserRepository.GetByIdAsync(roomPlayer.RegularUserId);
+                    regularUser.UpdatePlayerStats(roomPlayer.WordsPerMinute, roomPlayer.HasWon);
+                    regularUser.LeaveRoom();
+                    string value;
+                    Players.TryRemove(roomPlayer.UserName, out value);
+                }
+
+                await unitOfWork.SaveChangesAsync();
+            }
         }
 
         public async Task<Room> UpdateStartedRoom(Room room)
@@ -127,17 +130,20 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
 
         public async Task<Room> UpdateNonStartedRoom(Room room)
         {
-            Room savedRoom = await _unitOfWork.RoomRepository.SecureGetByIdAsync(room.Id);
-            await _notificationManager.SendRoomInfoToGroup(room.Id.ToString(), JsonSerializer.Serialize(new RoomDTO(room)));
-            if (savedRoom.ShouldStart())
+            using (IUnitOfWork unitOfWork = _serviceProvider.CreateScope().ServiceProvider.GetService<IUnitOfWork>())
             {
-                savedRoom.Start();
-                this.StartRoom(savedRoom);
-                await _unitOfWork.SaveChangesAsync();
-                return null;
-            }
+                Room savedRoom = await unitOfWork.RoomRepository.SecureGetByIdAsync(room.Id);
+                await _notificationManager.SendRoomInfoToGroup(room.Id.ToString(), JsonSerializer.Serialize(new RoomDTO(room)));
+                if (savedRoom.ShouldStart())
+                {
+                    savedRoom.Start();
+                    this.StartRoom(savedRoom);
+                    await unitOfWork.SaveChangesAsync();
+                    return null;
+                }
 
-            return savedRoom;
+                return savedRoom;
+            }
         }
 
         public void StartRoom(Room room)
@@ -151,8 +157,11 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
 
         public async Task AddRoom(int roomId)
         {
-            Room room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
-            NonStartedRoom.Add(room);
+            using (IUnitOfWork unitOfWork = _serviceProvider.CreateScope().ServiceProvider.GetService<IUnitOfWork>())
+            {
+                Room room = await unitOfWork.RoomRepository.GetByIdAsync(roomId);
+                NonStartedRoom.Add(room);
+            }
         }
 
         public void UpdateRoomPlayerInput(int roomId, string userName, string input)
