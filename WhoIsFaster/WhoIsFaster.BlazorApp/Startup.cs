@@ -21,6 +21,8 @@ using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfa
 using WhoIsFaster.BlazorApp.BackgroundServices;
 using WhoIsFaster.Infrastructure.SignalRNotifications.Hubs;
 using WhoIsFaster.BlazorApp.EmailServices;
+using WhoIsFaster.BlazorApp.GameServices;
+using WhoIsFaster.BlazorApp.EventServices;
 
 namespace WhoIsFaster.BlazorApp
 {
@@ -51,8 +53,10 @@ namespace WhoIsFaster.BlazorApp
             services.AddScoped<IUnitOfWork, EfCoreUnitOfWork>();
             services.AddScoped<IRoomService, RoomService>();
             services.AddScoped<IRegularUserService, RegularUserService>();
+            services.AddScoped<IGameService, GameService>();
             services.AddScoped<ITextService, TextService>();
-
+            services.AddScoped<IEventService, EventService>();	
+            
             services.AddSingleton<IGameNotificationManager, GameNotificationManager>();
             services.AddTransient<IEmailSender, EmailSender>();
 

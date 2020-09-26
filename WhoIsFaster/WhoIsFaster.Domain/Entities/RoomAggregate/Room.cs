@@ -31,18 +31,20 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         public Text Text { get; private set; }
         public bool IsDeleted { get; private set; }
 
+
         public Room()
-        {
+        { 
         }
 
         public Room(int maxPlayers, int playersToStart, Text text, double gameLengthSeconds, double lengthOfStarting, RoomType roomType)
         {
             MaxPlayers = maxPlayers;
             PlayersToStart = playersToStart;
-            WordList = text.TextContent.Split(" ").ToList();
+            WordList = text.TextContent?.Split(" ").ToList();
             Text = text;
             GameLengthSeconds = gameLengthSeconds;
             LengthOfStarting = lengthOfStarting;
+            RoomType = roomType;
             HasStarted = false;
             HasFinished = false;
             IsDeleted = false;
@@ -60,11 +62,9 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             }
         }
 
-        public bool PlayerJoin(RegularUser regularUser)
-        {
+        public bool PlayerJoin(RegularUser regularUser) {
             var joined = false;
-            if (!HasStarted || !IsFull())
-            {
+            if (!HasStarted || !IsFull()) {
                 joined = true;
                 roomPlayers.Add(new RoomPlayer(this, regularUser, WordList[0]));
                 LastPlayerJoined = DateTime.Now;
@@ -73,7 +73,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
                     this.SetIsStarting();
                 }
             }
-
+            
             return joined;
         }
 
@@ -111,7 +111,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             if (!HasFinished)
             {
 
-                foreach (var player in roomPlayers)
+                foreach(var player in roomPlayers)
                 {
                     UpdateRoomPlayer(player);
                 }
@@ -147,7 +147,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             }
         }
 
-        public bool CheckIfOver()
+        public bool CheckIfOver() 
         {
             var isOver = false;
             if ((DateTime.Now - TimeStarted).TotalSeconds >= GameLengthSeconds)
@@ -171,9 +171,9 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
                 foreach (var player in roomPlayers)
                 {
                     if (player.IsDone && roomPlayers.Where(p => p.HasWon == true).Count() == 0)
-                        {
-                            player.PlayerWon();
-                        }
+                    {
+                        player.PlayerWon();
+                    }
                 }
                 if (roomPlayers.All(p => p.IsDone))
                 {
@@ -184,8 +184,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             return isOver;
         }
 
-        public bool ShouldStart()
-        {
+        public bool ShouldStart() {
             if (RoomType == RoomType.Public && roomPlayers.Count >= PlayersToStart && (DateTime.Now - LastPlayerJoined).TotalSeconds >= LengthOfStarting)
             {
                 return true;

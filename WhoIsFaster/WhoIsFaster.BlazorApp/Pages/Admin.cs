@@ -16,12 +16,12 @@ namespace WhoIsFaster.BlazorApp.Pages
         private IEnumerable<TextVM> hiddenTexts;
 
         public Text _Text { get; set; } = new Text();
-        private bool saved;
+        public bool Saved { get; set; }
 
         private async Task ValidSubmit()
         {
             await textService.CreateTextAsync(_Text.Source, _Text.TextContent);
-            saved = true;
+            Saved = true;
             _Text.Source = string.Empty;
             _Text.TextContent = string.Empty;
             await OnInitializedAsync();
@@ -29,16 +29,16 @@ namespace WhoIsFaster.BlazorApp.Pages
 
         private void InvalidSubmit()
         {
-            saved = false;
+            Saved = false;
         }
 
         private void HideAlert()
         {
-            saved = false;
+            Saved = false;
         }
         protected override async Task OnInitializedAsync()
         {   
-                saved = false;
+                Saved = false;
                 StateHasChanged();
                 texts = TextVMExtensions.ToTextVMs(await textService.GetAllTextsAsync());
                 hiddenTexts = TextVMExtensions.ToTextVMs(await textService.GetAllHiddenTextsAsync());
@@ -47,14 +47,14 @@ namespace WhoIsFaster.BlazorApp.Pages
 
         private async void DeleteText(int id)
         {   
-            saved = false;
+            Saved = false;
             await textService.DeleteTextAsync(id);
             await OnInitializedAsync();
         }
 
         private async void RecoverText(int id)
         {
-            saved = false;
+            Saved = false;
             await textService.RecoverTextAsync(id);
             await OnInitializedAsync();
         }

@@ -41,7 +41,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             CurrentTextIndex = 0;
             CorrectlyTypedWordNumber = 0;
             HasWon = false;
-            IsDone = true;
+            IsDone = false;
             CurrentInput = "";
         }
 
@@ -99,20 +99,20 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         {
             var correctIndex = GetCorrectlyTypedIndexOfWord(CurrentInput);
             var FinishedWord = false;
-            if (correctIndex == CurrentWord.Length && CurrentInput[correctIndex] == ' ')
+            if (correctIndex == CurrentWord.Length && CurrentInput.Length == CurrentWord.Length + 1 && CurrentInput[correctIndex] == ' ')
             {
                 CurrentTextIndex = CurrentTextIndex + CurrentWord.Length + 1;
                 CorrectlyTypedTextIndex = CurrentTextIndex;
                 IncorrectilyTypedTextEndIndex = CurrentTextIndex;
                 CorrectlyTypedWordNumber += 1;
+                CurrentInput = "";
                 FinishedWord = true;
             }
             else
             {
-                CorrectlyTypedTextIndex += correctIndex;
-                IncorrectilyTypedTextEndIndex += CurrentInput.Length;
+                CorrectlyTypedTextIndex = CurrentTextIndex + correctIndex;
+                IncorrectilyTypedTextEndIndex = CurrentTextIndex + CurrentInput.Length;
             }
-
             return FinishedWord;
         }
 
@@ -129,6 +129,5 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
 
             return i;
         }
-
     }
 }
