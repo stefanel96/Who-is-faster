@@ -10,7 +10,7 @@
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
 
         <ul class="nav flex-column">
-            @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
+            @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                         <span class="oi oi-home" aria-hidden="true"></span> 
@@ -50,7 +50,7 @@
                     </li>
                 </Authorized>
             </AuthorizeView>
-            @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
+            @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
                 <li class="nav-item px-3">
                     <NavLink class="nav-link" href="contact" Match="NavLinkMatch.All">
                         <span class="oi oi-info" aria-hidden="true"></span> 

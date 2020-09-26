@@ -26,7 +26,7 @@
             </div>
             <div class="">
                 <ul class="nav flex-column">
-                    @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin"))
+                    @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin"))
                     {
                         <li class="nav-item px-3">
                             <a href="~/" class="nav-link active">
@@ -36,7 +36,7 @@
                     }
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
+                        @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
                             <li class="nav-item px-3">
                                 <a href="~/room" class="nav-link">
                                     <span class="oi oi-globe" aria-hidden="true"></span>
@@ -64,7 +64,7 @@
                             </li>
                         }
                     }
-                    @if (!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
+                    @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
                         <li class="nav-item px-3">
                             <a href="~/contact" class="nav-link">
                                 <span class="oi oi-info" aria-hidden="true"></span> 

@@ -10,7 +10,7 @@
     protected override void OnInitialized()
     {
         
-        if(HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
+        if(HttpContextAccessor == null? false:HttpContextAccessor.HttpContext.User.Identity.IsAuthenticated)
             NavigationManager.NavigateTo("",true);
         else{
             var returnUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
