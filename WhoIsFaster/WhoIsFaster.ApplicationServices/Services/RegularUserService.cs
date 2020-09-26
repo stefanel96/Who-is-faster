@@ -31,7 +31,7 @@ namespace WhoIsFaster.ApplicationServices.Services
 
         public async Task<RegularUserDTO> GetRegularUserByUserNameAsync(string userName)
         {
-            var regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            var regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with given username {userName} doesn't exist.");
@@ -42,7 +42,7 @@ namespace WhoIsFaster.ApplicationServices.Services
 
         public async Task UpdateRegularUserAsync(string userName, string firstName, string lastName)
         {
-            var regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            var regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with given username {userName} doesn't exist.");

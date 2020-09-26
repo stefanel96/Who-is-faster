@@ -68,6 +68,10 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
                 joined = true;
                 roomPlayers.Add(new RoomPlayer(this, regularUser, WordList[0]));
                 LastPlayerJoined = DateTime.Now;
+                if (roomPlayers.Count >= 2)
+                {
+                    this.SetIsStarting();
+                }
             }
 
             return joined;
@@ -130,7 +134,14 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
                 var FinishedWord = player.CheckInput();
                 if (FinishedWord)
                 {
-                    player.UpdateCurrentWord(WordList[player.CorrectlyTypedWordNumber]);
+                    if (player.CurrentWord != WordList[WordList.Count - 1])
+                    {
+                        player.UpdateCurrentWord(WordList[player.CorrectlyTypedWordNumber]);
+                    }
+                    else
+                    {
+                        player.PlayerDone();
+                    }
                     player.UpdateWordsPerMinute(Convert.ToInt32(player.CorrectlyTypedWordNumber / (DateTime.Now - TimeStarted).TotalMinutes));
                 }
             }
@@ -159,12 +170,15 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             {
                 foreach (var player in roomPlayers)
                 {
-                    if (player.CorrectlyTypedWordNumber == this.WordList.Count())
-                    {
-                        player.PlayerWon();
-                        isOver = true;
-                        HasFinished = true;
-                    }
+                    if (player.IsDone && roomPlayers.Where(p => p.HasWon == true).Count() == 0)
+                        {
+                            player.PlayerWon();
+                        }
+                }
+                if (roomPlayers.All(p => p.IsDone))
+                {
+                    isOver = true;
+                    HasFinished = true;
                 }
             }
             return isOver;

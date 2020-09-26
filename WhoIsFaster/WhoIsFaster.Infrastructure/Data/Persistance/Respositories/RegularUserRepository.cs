@@ -39,5 +39,14 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             return await whoIsFasterDbContext.RegularUsers
                 .FirstOrDefaultAsync(ru => ru.UserName.Equals(userName));
         }
+
+        public async Task<RegularUser> SecureGetByUserNameAsync(string userName)
+        {
+            RegularUser regularUser = await whoIsFasterDbContext.RegularUsers
+                .FirstOrDefaultAsync(ru => ru.UserName.Equals(userName));
+            await whoIsFasterDbContext.Entry(regularUser).ReloadAsync();
+
+            return regularUser;
+        }
     }
 }

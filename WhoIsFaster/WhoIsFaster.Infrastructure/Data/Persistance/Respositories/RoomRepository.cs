@@ -71,7 +71,7 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             Room room = await whoIsFasterDbContext.Rooms
                            .Include(r => r.RoomPlayers)
                            .Include(r => r.Text)
-                           .Where(r => r.RoomPlayers.Any(rp => rp.UserName == userName))
+                           .Where(r => !r.HasStarted && !r.HasFinished && r.RoomPlayers.Any(rp => rp.UserName == userName))
                            .FirstOrDefaultAsync();
             if (room != null)
             {

@@ -19,7 +19,7 @@ namespace WhoIsFaster.ApplicationServices.Services
         }
         public async Task<int> CreateAndJoinPartyRoomAsync(string userName)
         {
-            RegularUser regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            RegularUser regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");
@@ -62,7 +62,7 @@ namespace WhoIsFaster.ApplicationServices.Services
 
         public async Task<int> CreateAndJoinPracticeRoomAsync(string userName)
         {
-            RegularUser regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            RegularUser regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");
@@ -116,7 +116,7 @@ namespace WhoIsFaster.ApplicationServices.Services
 
         public async Task<RoomResponseDTO> JoinOrCreateRoomAsync(string userName)
         {
-            RegularUser regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            RegularUser regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
             bool isNew = false;
             if (regularUser == null)
             {
@@ -141,9 +141,13 @@ namespace WhoIsFaster.ApplicationServices.Services
             }
 
             room.PlayerJoin(regularUser);
-            regularUser.JoinRoom(room.Id);
-
             await _unitOfWork.SaveChangesAsync();
+
+            if (room != null)
+            {
+                regularUser.JoinRoom(room.Id);
+                await _unitOfWork.SaveChangesAsync();
+            }
 
             return new RoomResponseDTO(room.Id, isNew);
 
@@ -157,7 +161,7 @@ namespace WhoIsFaster.ApplicationServices.Services
                 throw new WhoIsFasterException($"Room with ID {roomId} doesn't exist.");
             }
 
-            RegularUser regularUser = await _unitOfWork.RegularUserRepository.GetByUserNameAsync(userName);
+            RegularUser regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");

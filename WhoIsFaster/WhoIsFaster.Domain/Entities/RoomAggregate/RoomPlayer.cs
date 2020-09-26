@@ -19,6 +19,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         public string CurrentWord { get; private set; }
         public int CorrectlyTypedWordNumber { get; private set; }
         public bool HasWon { get; private set; }
+        public bool IsDone { get; private set; }
         public string CurrentInput { get; private set; }
         public bool IsRoomAdmin { get; private set; }
 
@@ -40,6 +41,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             CurrentTextIndex = 0;
             CorrectlyTypedWordNumber = 0;
             HasWon = false;
+            IsDone = true;
             CurrentInput = "";
         }
 
@@ -81,6 +83,11 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         public void PlayerWon()
         {
             HasWon = true;
+        }
+
+        public void PlayerDone()
+        {
+            IsDone = true;
         }
 
         public void SetRoomAdmin()

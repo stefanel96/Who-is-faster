@@ -117,14 +117,15 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
             }
             room.UpdateRoomPlayers();
 
-            await _notificationManager.SendRoomInfoToGroup(room.Id.ToString(), JsonSerializer.Serialize(new RoomDTO(room)));
 
             if (room.CheckIfOver())
             {
                 await EndRoom(room);
+                await _notificationManager.SendRoomInfoToGroup(room.Id.ToString(), JsonSerializer.Serialize(new RoomDTO(room)));
                 return null;
             }
 
+            await _notificationManager.SendRoomInfoToGroup(room.Id.ToString(), JsonSerializer.Serialize(new RoomDTO(room)));
             return room;
         }
 

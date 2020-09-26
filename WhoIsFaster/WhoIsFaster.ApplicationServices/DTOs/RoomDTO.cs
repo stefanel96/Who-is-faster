@@ -12,6 +12,7 @@ namespace WhoIsFaster.ApplicationServices.DTOs
         public int Id { get; set; }
         public IEnumerable<RoomPlayerDTO> RoomPlayers { get; set; }
         public bool HasStarted { get; set; }
+        public bool HasFinished { get; set; }
         public bool IsStarting { get; set; }
         public int MaxPlayers { get;  set; }
         public int PlayersToStart { get; set; }
@@ -35,6 +36,7 @@ namespace WhoIsFaster.ApplicationServices.DTOs
             RoomPlayers = room.RoomPlayers.Select(rp => new RoomPlayerDTO(rp));
             IsStarting = room.IsStarting;
             HasStarted = room.HasStarted;
+            HasFinished = room.HasFinished;
             MaxPlayers = room.MaxPlayers;
             PlayersToStart = room.PlayersToStart;
             GameLengthSeconds = room.GameLengthSeconds;
