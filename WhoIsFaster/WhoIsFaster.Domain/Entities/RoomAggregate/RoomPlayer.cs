@@ -102,7 +102,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             if (correctIndex == CurrentWord.Length && CurrentInput.Length == CurrentWord.Length + 1 && CurrentInput[correctIndex] == ' ')
             {
                 CurrentTextIndex = CurrentTextIndex + CurrentWord.Length + 1;
-                if (CurrentWord != Room.WordList[Room.WordList.Count - 1])
+                if (CurrentWord == Room.WordList[Room.WordList.Count - 1])
                 {
                     CurrentTextIndex -= 1;
                 }
