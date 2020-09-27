@@ -1,23 +1,117 @@
 @page "/practice"
-@attribute [Authorize(Roles="User")]
+@attribute [Authorize(Roles = "User")]
 @using Blazored.Toast.Configuration
 
-@inject IToastService toastService
-<h1>@Title</h1>
+@if (Room == null)
+{
+<p><em>Loading...</em></p> }
+else
+{
+<div class="container" style="margin-bottom: 50px;">
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-primary">live results: </h3>
+        </div>
+        <div class="col-4">
+            @if (Room.HasStarted)
+            {
 
-<div class="progress"  style="background-color: #222222; margin-bottom: 10px;">
-    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">Player1</div>
+@if (EndingRoomPercentageReverse() >= 1 && EndingRoomPercentageReverse() <= 30)
+{
+<p class="text-primary" style="font-size: 20px;">
+    Game duration:
+    <span class="blinking" style="font-size: 20px;">@(EndingRoomSecondsReverse())s</span>
+</p>
+                        <div class="progress" style="height: 2px; background-color: #222222;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div> }
+                    else
+                    {
+<p class="text-primary" style="font-size: 20px;">
+    Game duration:
+    <span>@(EndingRoomSecondsReverse() == -0 ? 0 : EndingRoomSecondsReverse())s</span>
+</p>
+                        <div class="progress" style="height: 2px; background-color: #222222;">
+                            <div class="progress-bar" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>}}
+        </div>
+    </div>
+
+
 </div>
+                @if (ShowToastForOnePlayer && !Room.IsStarting && !Room.HasStarted)
+                {
 
-<button class="btn btn-info" @onclick="@(() => toastService.ShowInfo("Welcome to TheCodehubs"))">Info Toast</button>
-@* <button class="btn btn-success" @onclick="@(() => toastService.ShowSuccess("You are sign up successfully!"))">Success Toast</button> *@
-@* <button class="btn btn-warning" @onclick="@(() => toastService.ShowWarning("You are about to leave website!"))">Warning Toast</button> *@
-@* <button class="btn btn-danger" @onclick="@(() => toastService.ShowError("Oops! Error has occured"))">Error Toast</button> *@
-@* @toastService.ShowInfo("Welcome to TheCodehubs") *@
-<BlazoredToasts Position="ToastPosition.BottomRight"
-                Timeout="10"
+                    ToastService.ShowInfo("Please click start button for starting pracice!", "Who Is Faster");
+
+                    ShowToastForOnePlayer = false;
+
+                }
+                                @if (Room.IsStarting && !Room.HasStarted)
+                                {
+                                    ChangeDurationOfToast = 1;
+                                    if (ShowToastForStartingGame)
+                                    {
+                                        ToastService.ShowWarning(Room.LengthOfStarting + "", "Prepare to type for...");
+                                    }
+                                    ShowToastForStartingGame = false;
+
+                                    for (double i = Room.LengthOfStarting - 1; i >= 0; i--)
+                                    {
+                                        var time = (Room.LengthOfStarting + (StartClicked - DateTime.Now).TotalSeconds);
+                                        if (i == Math.Round(time, 1) && i != 0)
+                                            ToastService.ShowWarning((Room.LengthOfStarting + Math.Round((StartClicked - DateTime.Now).TotalSeconds)) + "", "Prepare to type for...");
+                                        if (i == 0 && Math.Round(time, 1) == 0)
+                                        {
+                                            ChangeDurationOfToast = 3;
+                                            ToastService.ShowSuccess("Type As Fast As You Can!!", "Start");
+                                        }
+                                    }
+
+
+                                }
+
+                                                <div class="container" style="margin-bottom: 20px;">
+                                                    <div class="progress" style="background-color: #222222;">
+                                                        <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" style="width: @(Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length),2)*100)%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@(Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length),2)*100)" aria-valuemax="100">
+                                                            @(HttpContextAccessor.HttpContext.User.Identity.Name +" "+ (int)(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length)*100)+"%")
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                                @if (Room.HasStarted)
+                                                                {
+                                                <div class="container" style="margin-bottom:20px; margin-top:20px;">
+                                                    <p class="text-break" style="text-align: justify; font-size: 20px;">
+                                                        <span class="text-success">@(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)])</span><span class="text-danger">@((IncorrectWordIndex > CorrectWordIndex) ? Room.Text.TextContent[(CurrentTextIndex + CorrectWordIndex)..(Room.Text.TextContent.Length < CurrentTextIndex + IncorrectWordIndex ? Room.Text.TextContent.Length : CurrentTextIndex + IncorrectWordIndex)] : "")</span>@((IncorrectWordIndex > CorrectWordIndex ) ? Room.Text.TextContent.Length < CurrentTextIndex + IncorrectWordIndex ? "" : Room.Text.TextContent[(CurrentTextIndex + IncorrectWordIndex)..] : Room.Text.TextContent[(CurrentTextIndex + CorrectWordIndex)..])
+                                                    </p>
+                                                </div> }
+                                            else
+                                            {
+                            <div class="container" style="margin-bottom: 50px;">
+                                <div class="alert alert-primary" role="alert">
+                                    <strong>Info!</strong> Text will be available when the game starts!
+                                </div>
+                            </div>}
+                                                                                <div class="container" style="margin-top: 30px;">
+                                                                                    <div class="input-group">
+                                                                                        <div class="input-group-prepend">
+                                                                                            <span class="input-group-text" id="">Type here</span>
+                                                                                        </div>
+                                                                                        <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input=(string)e.Value; OnInput(); })">
+                                                                                    </div>
+                                                                                    @if (!Room.HasStarted || !Room.IsStarting)
+                                                                                    {
+                                                                    <button disabled="@(DisableStartButton)" style="margin-top: 30px;" type="button" class="btn btn-success" @onclick="@StartRoom">START</button>}
+                                                                                </div>}
+
+<BlazoredToasts Position="ToastPosition.TopRight"
+                Timeout="@ChangeDurationOfToast"
                 IconType="IconType.FontAwesome"
+                InfoIcon="fa fa-hourglass-start"
+                SuccessIcon="fa fa-keyboard-o"
                 SuccessClass="success-toast-override"
-                SuccessIcon="fa fa-thumbs-up"
+                WarningIcon="fa fa-rocket"
+                WarningClass="warning-toast-override"
                 ErrorIcon="fa fa-bug"
                 RemoveToastsOnNavigation="true" />
