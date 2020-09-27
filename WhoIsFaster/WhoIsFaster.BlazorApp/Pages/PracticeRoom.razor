@@ -1,9 +1,23 @@
 @page "/practice"
 @attribute [Authorize(Roles="User")]
+@using Blazored.Toast.Configuration
+
+@inject IToastService toastService
 <h1>@Title</h1>
 
 <div class="progress"  style="background-color: #222222; margin-bottom: 10px;">
     <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">Player1</div>
 </div>
 
-
+<button class="btn btn-info" @onclick="@(() => toastService.ShowInfo("Welcome to TheCodehubs"))">Info Toast</button>
+@* <button class="btn btn-success" @onclick="@(() => toastService.ShowSuccess("You are sign up successfully!"))">Success Toast</button> *@
+@* <button class="btn btn-warning" @onclick="@(() => toastService.ShowWarning("You are about to leave website!"))">Warning Toast</button> *@
+@* <button class="btn btn-danger" @onclick="@(() => toastService.ShowError("Oops! Error has occured"))">Error Toast</button> *@
+@* @toastService.ShowInfo("Welcome to TheCodehubs") *@
+<BlazoredToasts Position="ToastPosition.BottomRight"
+                Timeout="10"
+                IconType="IconType.FontAwesome"
+                SuccessClass="success-toast-override"
+                SuccessIcon="fa fa-thumbs-up"
+                ErrorIcon="fa fa-bug"
+                RemoveToastsOnNavigation="true" />

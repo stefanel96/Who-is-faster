@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WhoIsFaster.Infrastructure.Data.Persistance;
 using WhoIsFaster.Infrastructure.Data.Persistance.Common;
 using Microsoft.AspNetCore.Builder;
@@ -23,6 +19,7 @@ using WhoIsFaster.Infrastructure.SignalRNotifications.Hubs;
 using WhoIsFaster.BlazorApp.EmailServices;
 using WhoIsFaster.BlazorApp.GameServices;
 using WhoIsFaster.BlazorApp.EventServices;
+using Blazored.Toast;
 
 namespace WhoIsFaster.BlazorApp
 {
@@ -56,6 +53,8 @@ namespace WhoIsFaster.BlazorApp
             services.AddScoped<IGameService, GameService>();
             services.AddScoped<ITextService, TextService>();
             services.AddScoped<IEventService, EventService>();	
+            
+            services.AddBlazoredToast();
             
             services.AddSingleton<IGameNotificationManager, GameNotificationManager>();
             services.AddTransient<IEmailSender, EmailSender>();

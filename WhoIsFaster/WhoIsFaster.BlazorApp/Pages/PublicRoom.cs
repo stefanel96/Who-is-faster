@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
@@ -35,6 +36,10 @@ namespace WhoIsFaster.BlazorApp.Pages {
         [Inject]
         public IEventService EventService { get; set; }
 
+        [Inject]
+        public IToastService ToastService { get; set; }
+        public bool ShowToastForOnePlayer { get; set; }
+        public bool ShowToastForStartingGame { get; set; }
         public string Input { get; set; } = "";
         public RoomVM Room { get; set; }
         public RoomPlayerVM RoomPlayer { get; set; }
@@ -47,17 +52,19 @@ namespace WhoIsFaster.BlazorApp.Pages {
         public int CurrentTextIndex { get; set; }
 
         public bool EndOfText { get; set; }
-
+        public int ChangeDurationOfToast { get; set; }
         protected override async Task OnInitializedAsync () {
+            ChangeDurationOfToast = 5;
+            ShowToastForStartingGame = true;
             string userName = HttpContextAccessor.HttpContext.User.Identity.Name;
             var roomResponse = await RoomService.JoinOrCreateRoomAsync (userName);
             if (roomResponse.IsNew) {
                 await GameService.AddRoomToGame (roomResponse.RoomId);
             }
             Room = new RoomVM (await RoomService.GetRoomByUserNameAsync (userName));
+            ShowToastForOnePlayer = Room.IsStarting && !Room.HasStarted? false : true;
             Username = userName;
             RoomPlayer = Room.RoomPlayers.FirstOrDefault (rp => rp.UserName == userName);
-
             hubConnection = new HubConnectionBuilder ()
                 .WithUrl (NavigationManager.ToAbsoluteUri ("/whoIsFasterSignalRHub"), conf => {
                     conf.HttpMessageHandlerFactory = (x) => new HttpClientHandler {
@@ -82,6 +89,18 @@ namespace WhoIsFaster.BlazorApp.Pages {
 
         }
 
+        public double EndingRoomSecondsReverse(){
+            return Math.Round(Room.GameLengthSeconds + (Room.StartEventTime-DateTime.Now).TotalSeconds + Room.LengthOfStarting);
+        }
+
+        public int EndingRoomPercentage(){
+            return (int)((Math.Round((DateTime.Now-Room.StartEventTime).TotalSeconds - Room.LengthOfStarting)/Room.GameLengthSeconds)*100);
+        }
+
+        public int EndingRoomPercentageReverse(){
+            return (int)((Math.Round(Room.GameLengthSeconds + (Room.StartEventTime-DateTime.Now).TotalSeconds + Room.LengthOfStarting)/Room.GameLengthSeconds)*100);
+        }
+
         public void OnInput () {
             CorrectWordIndex = GetCorrectlyTypedIndexOfWord ();
             IncorrectWordIndex = Input.Trim ().Length > CorrectWordIndex ? Input.Trim ().Length : CorrectWordIndex;
@@ -102,12 +121,14 @@ namespace WhoIsFaster.BlazorApp.Pages {
             await RoomService.StartRoom (Room.Id);
         }
 
-        public string addBGColor(int index){
-            switch (index)
-            {
-                case 1: return "bg-success";
-                case 2: return "bg-warning";
-                case 3: return "bg-danger";
+        public string addBGColor (int index) {
+            switch (index) {
+                case 1:
+                    return "bg-success";
+                case 2:
+                    return "bg-warning";
+                case 3:
+                    return "bg-danger";
             }
 
             return "";
