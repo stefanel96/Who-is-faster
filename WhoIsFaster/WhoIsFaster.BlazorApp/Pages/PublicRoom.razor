@@ -72,15 +72,12 @@
 
             
         }
-        @* <div class="container" style="margin-bottom: 20px;">
-
-        </div> *@
         for (int i = 0; i < Room.RoomPlayers.Count(); i++)
         {   
             <div class="container" style="margin-bottom: 20px;">
                 <div class="progress" style="background-color: #222222;">
                     <div class="progress-bar progress-bar-striped @addBGColor(i) progress-bar-animated" role="progressbar" style="width: @(HttpContextAccessor.HttpContext.User.Identity.Name == Room.RoomPlayers.ElementAt(i).UserName? Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length),2)*100: Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex)/Room.Text.TextContent.Trim().Length),2)*100)%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@(Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex)/Room.Text.TextContent.Trim().Length),2)*100)" aria-valuemax="100">
-                        @(Room.RoomPlayers.ElementAt(i).UserName) @*" "+(HttpContextAccessor.HttpContext.User.Identity.Name == Room.RoomPlayers.ElementAt(i).UserName?(int)(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length)*100): (int)(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex)/Room.Text.TextContent.Trim().Length)*100))+"%")*@
+                        @(Room.RoomPlayers.ElementAt(i).UserName +" "+(HttpContextAccessor.HttpContext.User.Identity.Name == Room.RoomPlayers.ElementAt(i).UserName?(int)(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length)*100): ((int)(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex)/Room.Text.TextContent.Trim().Length)*100)))+"%")
                     </div>
                 </div>
             </div>

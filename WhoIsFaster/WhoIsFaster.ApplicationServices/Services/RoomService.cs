@@ -136,7 +136,7 @@ namespace WhoIsFaster.ApplicationServices.Services
                     throw new WhoIsFasterException($"There are no texts in the database.");
                 }
 
-                room = new Room(4, 2, text, 30, 5, RoomType.Public);
+                room = new Room(4, 2, text, 1200, 5, RoomType.Public);
                 await _unitOfWork.RoomRepository.AddRoomAsync(room);
                 isNew = true;
             }
