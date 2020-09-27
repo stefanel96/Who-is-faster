@@ -129,7 +129,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
 
         public void UpdateRoomPlayer(RoomPlayer player)
         {
-            if (!HasFinished)
+            if (!HasFinished && !player.IsDone)
             {
                 var FinishedWord = player.CheckInput();
                 if (FinishedWord)
