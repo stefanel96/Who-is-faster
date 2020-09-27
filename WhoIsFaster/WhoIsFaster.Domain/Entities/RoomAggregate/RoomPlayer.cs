@@ -104,7 +104,10 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
                 CurrentTextIndex = CurrentTextIndex + CurrentWord.Length + 1;
                 CorrectlyTypedTextIndex = CurrentTextIndex;
                 IncorrectilyTypedTextEndIndex = CurrentTextIndex;
-                CorrectlyTypedWordNumber += 1;
+                if (CurrentWord != Room.WordList[Room.WordList.Count - 1])
+                {
+                    CorrectlyTypedWordNumber += 1;
+                }
                 CurrentInput = "";
                 FinishedWord = true;
             }
