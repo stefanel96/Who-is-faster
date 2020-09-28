@@ -1,16 +1,23 @@
 using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Web;
 using Blazored.Toast.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR.Client;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.JSInterop;
 using WhoIsFaster.ApplicationServices.DTOs;
 using WhoIsFaster.ApplicationServices.Interfaces;
 using WhoIsFaster.BlazorApp.EventServices;
 using WhoIsFaster.BlazorApp.GameServices;
+using WhoIsFaster.BlazorApp.StringEncryption;
 using WhoIsFaster.BlazorApp.ViewModels;
 using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfaces;
 
@@ -42,6 +49,8 @@ namespace WhoIsFaster.BlazorApp.Pages
 
         [Inject]
         public IToastService ToastService { get; set; }
+        [Inject]
+        IJSRuntime JSRuntime { get; set; }
         public bool ShowToastForOnePlayer { get; set; }
         public bool ShowToastForStartingGame { get; set; }
         public string Input { get; set; } = "";
@@ -62,26 +71,33 @@ namespace WhoIsFaster.BlazorApp.Pages
         public string JoinLink { get; set; }
         public bool EnableInitialize { get; set; } = false;
         protected override async Task OnInitializedAsync()
-        {
+        {   
             string userName = HttpContextAccessor.HttpContext.User.Identity.Name;
             int roomResponse;
-            int.TryParse(RoomId, out var roomId);
-            if (roomId == 0)
+            if (RoomId == null)
             {
                 roomResponse = await RoomService.CreateAndJoinPartyRoomAsync(userName);
                 await GameService.AddRoomToGame(roomResponse);
             }
             else
-            {
+            {   
+                var urlDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(RoomId)); 
+                var decrypted = StringCipher.Decrypt(urlDecoded,"gsdoifjdsoi");
+                int.TryParse(decrypted, out var roomId);
                 roomResponse = await RoomService.JoinPartyRoomAsync(userName, roomId);
             }
             ChangeDurationOfToast = 5;
             ShowToastForStartingGame = true;
             Room = new RoomVM(await RoomService.GetRoomByUserNameAsync(userName));
-            JoinLink = NavigationManager.Uri + "/" + Room.Id;
             ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1 ? true : false;
             Username = userName;
             RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == userName);
+            if(RoomPlayer.IsRoomAdmin){
+                var encrypted = StringCipher.Encrypt(Room.Id+"","gsdoifjdsoi");
+                var urlEncoded = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(encrypted));
+                JoinLink = NavigationManager.Uri + "/" + urlEncoded;
+                JoinLink = HtmlEncoder.Default.Encode(JoinLink);
+            }
             hubConnection = new HubConnectionBuilder()
                 .WithUrl(NavigationManager.ToAbsoluteUri("/whoIsFasterSignalRHub"), conf =>
                 {
@@ -165,6 +181,11 @@ namespace WhoIsFaster.BlazorApp.Pages
 
             return "";
         }
+
+        public async void CopyToClipboard(){
+            await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", JoinLink);
+        }
+
         private int GetCorrectlyTypedIndexOfWord()
         {
             int n = RoomPlayer.CurrentWord.Length;

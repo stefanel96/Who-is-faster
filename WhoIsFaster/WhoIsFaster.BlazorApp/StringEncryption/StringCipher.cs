@@ -10,21 +10,21 @@ namespace WhoIsFaster.BlazorApp.StringEncryption
 {
     public static class StringCipher
     {
-        private const int Keysize = 256;
+        private const int Keysize = 128;
 
         private const int DerivationIterations = 1000;
 
         public static string Encrypt(string plainText, string passPhrase)
         {
-            var saltStringBytes = Generate256BitsOfRandomEntropy();
-            var ivStringBytes = Generate256BitsOfRandomEntropy();
+            var saltStringBytes = Generate128BitsOfRandomEntropy();
+            var ivStringBytes = Generate128BitsOfRandomEntropy();
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             using (var password = new Rfc2898DeriveBytes(passPhrase, saltStringBytes, DerivationIterations))
             {
                 var keyBytes = password.GetBytes(Keysize / 8);
                 using (var symmetricKey = new RijndaelManaged())
                 {
-                    symmetricKey.BlockSize = 256;
+                    symmetricKey.BlockSize = 128;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var encryptor = symmetricKey.CreateEncryptor(keyBytes, ivStringBytes))
@@ -60,7 +60,7 @@ namespace WhoIsFaster.BlazorApp.StringEncryption
                 var keyBytes = password.GetBytes(Keysize / 8);
                 using (var symmetricKey = new RijndaelManaged())
                 {
-                    symmetricKey.BlockSize = 256;
+                    symmetricKey.BlockSize = 128;
                     symmetricKey.Mode = CipherMode.CBC;
                     symmetricKey.Padding = PaddingMode.PKCS7;
                     using (var decryptor = symmetricKey.CreateDecryptor(keyBytes, ivStringBytes))
@@ -81,9 +81,9 @@ namespace WhoIsFaster.BlazorApp.StringEncryption
             }
         }
 
-        private static byte[] Generate256BitsOfRandomEntropy()
+        private static byte[] Generate128BitsOfRandomEntropy()
         {
-            var randomBytes = new byte[32];
+            var randomBytes = new byte[16];
             using (var rngCsp = new RNGCryptoServiceProvider())
             {
                 rngCsp.GetBytes(randomBytes);
