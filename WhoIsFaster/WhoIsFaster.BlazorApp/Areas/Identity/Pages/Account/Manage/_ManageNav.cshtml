@@ -4,8 +4,17 @@
 }
 <ul class="nav nav-pills flex-column">
     <li class="nav-item"><a class="nav-link @ManageNavPages.IndexNavClass(ViewContext)" id="profile" asp-page="./Index">Profile</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.StatsNavClass(ViewContext)" id="stats" asp-page="./Stats">My stats</a></li>
-    <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
+    @if (SignInManager.Context.User.IsInRole("User"))
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.StatsNavClass(ViewContext)" id="stats" asp-page="./Stats">My stats</a></li>
+        <li class="nav-item"><a class="nav-link @ManageNavPages.EmailNavClass(ViewContext)" id="email" asp-page="./Email">Email</a></li>
+    }
     <li class="nav-item"><a class="nav-link @ManageNavPages.ChangePasswordNavClass(ViewContext)" id="change-password" asp-page="./ChangePassword">Password</a></li>
     <li class="nav-item"><a class="nav-link @ManageNavPages.PersonalDataNavClass(ViewContext)" id="personal-data" asp-page="./PersonalData">Personal data</a></li>
+
+    @if (SignInManager.Context.User.IsInRole("Admin"))
+    {
+        <li class="nav-item"><a class="nav-link @ManageNavPages.NewAdminNavClass(ViewContext)" id="new-admin" asp-page="./NewAdmin">Add new admin</a></li>
+    }
+
 </ul>

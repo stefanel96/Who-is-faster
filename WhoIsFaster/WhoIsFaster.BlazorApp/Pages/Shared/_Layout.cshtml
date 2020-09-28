@@ -4,7 +4,6 @@
 @inject SignInManager<IdentityUser> SignInManager
 @inject IWebHostEnvironment Environment
 @inject ICompositeViewEngine Engine
-@inject IHttpContextAccessor HttpContextAccessor
 <!DOCTYPE html>
 <html>
 <head>
@@ -26,7 +25,7 @@
             </div>
             <div class="">
                 <ul class="nav flex-column">
-                    @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin"))
+                    @if (!SignInManager.Context.User.IsInRole("Admin"))
                     {
                         <li class="nav-item px-3">
                             <a href="~/" class="nav-link active">
@@ -36,7 +35,8 @@
                     }
                     @if (SignInManager.IsSignedIn(User))
                     {
-                        @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
+                        @if (!SignInManager.Context.User.IsInRole("Admin"))
+                        {
                             <li class="nav-item px-3">
                                 <a href="~/room" class="nav-link">
                                     <span class="oi oi-globe" aria-hidden="true"></span>
@@ -64,7 +64,7 @@
                             </li>
                         }
                     }
-                    @if (HttpContextAccessor == null? true:!HttpContextAccessor.HttpContext.User.IsInRole("Admin")){
+                    @if (!SignInManager.Context.User.IsInRole("Admin")){
                         <li class="nav-item px-3">
                             <a href="~/contact" class="nav-link">
                                 <span class="oi oi-info" aria-hidden="true"></span> 
