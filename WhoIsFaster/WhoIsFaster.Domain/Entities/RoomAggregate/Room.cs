@@ -33,7 +33,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
 
 
         public Room()
-        { 
+        {
         }
 
         public Room(int maxPlayers, int playersToStart, Text text, double gameLengthSeconds, double lengthOfStarting, RoomType roomType)
@@ -62,18 +62,23 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             }
         }
 
-        public bool PlayerJoin(RegularUser regularUser) {
+        public bool PlayerJoin(RegularUser regularUser)
+        {
             var joined = false;
-            if (!HasStarted || !IsFull()) {
+            if (!HasStarted || !IsFull())
+            {
                 joined = true;
-                roomPlayers.Add(new RoomPlayer(this, regularUser, WordList[0]));
+                if (roomPlayers.Count == 0)
+                    roomPlayers.Add(new RoomPlayer(this, regularUser, WordList[0], true));
+                else
+                    roomPlayers.Add(new RoomPlayer(this, regularUser, WordList[0], false));
                 LastPlayerJoined = DateTime.Now;
-                if (roomPlayers.Count >= 2)
+                if (roomPlayers.Count >= 2 && RoomType == RoomType.Public)
                 {
                     this.SetIsStarting();
                 }
             }
-            
+
             return joined;
         }
 
@@ -111,7 +116,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             if (!HasFinished)
             {
 
-                foreach(var player in roomPlayers)
+                foreach (var player in roomPlayers)
                 {
                     UpdateRoomPlayer(player);
                 }
@@ -147,7 +152,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             }
         }
 
-        public bool CheckIfOver() 
+        public bool CheckIfOver()
         {
             var isOver = false;
             if ((DateTime.Now - TimeStarted).TotalSeconds >= GameLengthSeconds)
@@ -184,7 +189,8 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             return isOver;
         }
 
-        public bool ShouldStart() {
+        public bool ShouldStart()
+        {
             if (RoomType == RoomType.Public && roomPlayers.Count >= PlayersToStart && (DateTime.Now - LastPlayerJoined).TotalSeconds >= LengthOfStarting)
             {
                 return true;

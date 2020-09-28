@@ -1,17 +1,129 @@
 @page "/party"
-@attribute [Authorize(Roles="User")]
-<h1>@Title</h1>
+@page "/party/{RoomId}"
+@attribute [Authorize(Roles = "User")]
+@using Blazored.Toast.Configuration
 
-<div class="progress"  style="background-color: #222222; margin-bottom: 10px;">
-    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 10%" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100">Player1</div>
-</div>
-<div class="progress" style="background-color: #222222; margin-bottom: 10px;">
-    <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Player2</div>
-</div>
-<div class="progress" style="background-color: #222222; margin-bottom: 10px;">
-    <div class="progress-bar progress-bar-striped bg-warning progress-bar-animated" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100">Player3</div>
-</div>
-<div class="progress" style="background-color: #222222; margin-bottom: 10px;">
-    <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Player4</div>
-</div>
 
+@if (Room == null)
+{
+    <div class="row">
+        <p><em>Loading...</em></p>
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div> }
+else
+{
+    @Room.Id
+    <br>
+    @JoinLink
+    <div class="container" style="margin-bottom: 50px;">
+        <div class="row">
+            <div class="col-8">
+                <h3 class="text-primary">live results: </h3>
+            </div>
+            <div class="col-4">
+                @if (Room.HasStarted)
+                {
+
+                    @if (EndingRoomPercentageReverse() >= 1 && EndingRoomPercentageReverse() <= 30)
+                    {
+                        <p class="text-primary" style="font-size: 20px;">
+                            Game duration:
+                            <span class="blinking" style="font-size: 20px;">@(EndingRoomSecondsReverse())s</span>
+                        </p>
+                        <div class="progress" style="height: 2px; background-color: #222222;">
+                            <div class="progress-bar bg-danger" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div> }
+                    else
+                    {
+                        <p class="text-primary" style="font-size: 20px;">
+                            Game duration:
+                            <span>@(EndingRoomSecondsReverse() == -0 ? 0 : EndingRoomSecondsReverse())s</span>
+                        </p>
+                        <div class="progress" style="height: 2px; background-color: #222222;">
+                            <div class="progress-bar" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>}}
+            </div>
+        </div>
+
+
+    </div>
+    @if (ShowToastForOnePlayer && !Room.IsStarting && !Room.HasStarted)
+    {
+
+        ToastService.ShowInfo("You're first wait for someone else to join a room! Send link to your friends!", "Who Is Faster");
+
+        ShowToastForOnePlayer = false;
+
+    }
+    @if (Room.IsStarting && !Room.HasStarted)
+    {
+        ChangeDurationOfToast = 1;
+        if (ShowToastForStartingGame)
+        {
+            ToastService.ShowWarning(Room.LengthOfStarting + "", "Prepare to type for...");
+        }
+        ShowToastForStartingGame = false;
+
+        for (double i = Room.LengthOfStarting - 1; i >= 0; i--)
+        {
+            var time = (Room.LengthOfStarting + (StartClicked - DateTime.Now).TotalSeconds);
+            if (i == Math.Round(time, 1) && i != 0)
+                ToastService.ShowWarning((Room.LengthOfStarting + Math.Round((StartClicked - DateTime.Now).TotalSeconds)) + "", "Prepare to type for...");
+            if (i == 0 && Math.Round(time, 1) == 0)
+            {
+                ChangeDurationOfToast = 3;
+                ToastService.ShowSuccess("Type As Fast As You Can!!", "Start");
+            }
+        }
+
+
+
+    } for (int i = 0; i < Room.RoomPlayers.Count(); i++)
+    {
+        <div class="container" style="margin-bottom: 20px;">
+            <div class="progress" style="background-color: #222222;">
+                <div class="progress-bar progress-bar-striped @addBGColor(i) progress-bar-animated" role="progressbar" style="width: @(HttpContextAccessor.HttpContext.User.Identity.Name == Room.RoomPlayers.ElementAt(i).UserName ? Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length), 2) * 100 : Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@(Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)" aria-valuemax="100">
+                    @(Room.RoomPlayers.ElementAt(i).UserName + " " + (HttpContextAccessor.HttpContext.User.Identity.Name == Room.RoomPlayers.ElementAt(i).UserName ? (int)(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length) * 100) : ((int)(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length) * 100))) + "%")
+                </div>
+            </div>
+        </div> }
+
+    @if (Room.HasStarted)
+    {
+        <div class="container" style="margin-bottom:20px; margin-top:20px;">
+            <p class="text-break" style="text-align: justify; font-size: 20px;">
+                <span class="text-success">@(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)])</span><span class="text-danger">@((IncorrectWordIndex > CorrectWordIndex) ? Room.Text.TextContent[(CurrentTextIndex + CorrectWordIndex)..(Room.Text.TextContent.Length < CurrentTextIndex + IncorrectWordIndex ? Room.Text.TextContent.Length : CurrentTextIndex + IncorrectWordIndex)] : "")</span>@((IncorrectWordIndex > CorrectWordIndex) ? Room.Text.TextContent.Length < CurrentTextIndex + IncorrectWordIndex ? "" : Room.Text.TextContent[(CurrentTextIndex + IncorrectWordIndex)..] : Room.Text.TextContent[(CurrentTextIndex + CorrectWordIndex)..])
+            </p>
+        </div> }
+    else
+    {
+        <div class="container" style="margin-bottom: 50px;">
+            <div class="alert alert-primary" role="alert">
+                <strong>Info!</strong> Text will be available when the game starts!
+            </div>
+        </div>}
+    <div class="container" style="margin-top: 30px;">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="">Type here</span>
+            </div>
+            <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input = (string)e.Value; OnInput(); })">
+        </div>
+        @if (RoomPlayer.IsRoomAdmin && (!Room.HasStarted || !Room.IsStarting))
+        {
+            <button disabled="@(DisableStartButton || Room.RoomPlayers.Count() == 1)" style="margin-top: 30px;" type="button" class="btn btn-success" @onclick="@StartRoom">START</button>
+        }
+
+    </div>
+}
+<BlazoredToasts Position="ToastPosition.TopRight"
+                Timeout="@ChangeDurationOfToast"
+                IconType="IconType.FontAwesome"
+                InfoIcon="fa fa-hourglass-start"
+                SuccessIcon="fa fa-keyboard-o"
+                SuccessClass="success-toast-override"
+                WarningIcon="fa fa-rocket"
+                ErrorIcon="fa fa-bug"
+                RemoveToastsOnNavigation="true" />

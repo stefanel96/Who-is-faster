@@ -29,7 +29,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         }
 
 
-        public RoomPlayer(Room room, RegularUser regularUser, string currentWord)
+        public RoomPlayer(Room room, RegularUser regularUser, string currentWord, bool isAdmin)
         {
             Room = room;
             UserName = regularUser.UserName;
@@ -43,6 +43,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             HasWon = false;
             IsDone = false;
             CurrentInput = "";
+            IsRoomAdmin = isAdmin;
         }
 
         public void UpdateRoomPlayer(RoomPlayer roomPlayer)
