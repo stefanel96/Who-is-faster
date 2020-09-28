@@ -10,6 +10,8 @@ namespace WhoIsFaster.BlazorApp.Areas.Identity.Pages.Account.Manage
     {
         public static string Index => "Index";
 
+        public static string Stats => "Stats";
+
         public static string Email => "Email";
 
         public static string ChangePassword => "ChangePassword";
@@ -21,6 +23,8 @@ namespace WhoIsFaster.BlazorApp.Areas.Identity.Pages.Account.Manage
         public static string PersonalData => "PersonalData";
 
         public static string IndexNavClass(ViewContext viewContext) => PageNavClass(viewContext, Index);
+
+        public static string StatsNavClass(ViewContext viewContext) => PageNavClass(viewContext, Stats);
 
         public static string EmailNavClass(ViewContext viewContext) => PageNavClass(viewContext, Email);
 

@@ -1,0 +1,30 @@
+﻿@page
+@model StatsModel
+@{ ViewData["Title"] = "Stats";
+    ViewData["ActivePage"] = ManageNavPages.Stats; }
+
+<h4>@ViewData["Title"]:</h4>
+
+<span class="iconic iconic-keyboard" style="color:red" title="keyboard" aria-hidden="true"></span>
+<div class="list-group" style="width: 40%">
+    <a class="list-group-item list-group-item-action" style="background-color: rgba(25, 25, 25, .8)">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1" style="text-align:center"> Total wins: </h5> <span class="oi oi-thumb-up"></span>
+
+        </div>
+        <p class="mb-1" style="color: lawngreen; text-align:center; font-size: 24px; ">@Model.RegularUser?.Wins </p>
+
+    </a>
+    <a class="list-group-item list-group-item-action" style="background-color: rgba(25, 25, 25, .8)">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1" style="text-align: center;">Total loses:</h5> <span class="oi oi-thumb-down"></span>
+        </div>
+        <p class="mb-1" style="color: tomato; text-align:center; font-size: 24px;">@Model.RegularUser?.Loses</p>
+    </a>
+    <a class="list-group-item list-group-item-action" style="background-color: rgba(25, 25, 25, .8)">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1" style="text-align: center;">Words per minute:</h5> <span class="oi oi-code"></span>
+        </div>
+        <p class="mb-1" style="color: gold; text-align:center; font-size: 24px;">@Model.RegularUser?.AverageWordsPerMinute</p>
+    </a>
+</div>
