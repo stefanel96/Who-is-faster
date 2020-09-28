@@ -4,7 +4,13 @@
 
 @if (Room == null)
 {
-<p><em>Loading...</em></p> }
+    <div class="row"> 
+        <p><em>Loading...</em></p>
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only"></span>
+        </div>
+    </div>
+}
 else
 {
 <div class="container" style="margin-bottom: 50px;">
@@ -93,17 +99,18 @@ else
                                     <strong>Info!</strong> Text will be available when the game starts!
                                 </div>
                             </div>}
-                                                                                <div class="container" style="margin-top: 30px;">
-                                                                                    <div class="input-group">
-                                                                                        <div class="input-group-prepend">
-                                                                                            <span class="input-group-text" id="">Type here</span>
-                                                                                        </div>
-                                                                                        <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input=(string)e.Value; OnInput(); })">
-                                                                                    </div>
-                                                                                    @if (!Room.HasStarted || !Room.IsStarting)
-                                                                                    {
-                                                                    <button disabled="@(DisableStartButton)" style="margin-top: 30px;" type="button" class="btn btn-success" @onclick="@StartRoom">START</button>}
-                                                                                </div>}
+            <div class="container" style="margin-top: 30px;">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">Type here</span>
+                    </div>
+                    <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input=(string)e.Value; OnInput(); })">
+                </div>
+                @if (!Room.HasStarted || !Room.IsStarting)
+                {
+                    <button disabled="@(DisableStartButton)" style="margin-top: 30px;" type="button" class="btn btn-success" @onclick="@StartRoom">START</button>}
+            </div>
+}
 
 <BlazoredToasts Position="ToastPosition.TopRight"
                 Timeout="@ChangeDurationOfToast"

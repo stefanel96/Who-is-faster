@@ -62,7 +62,7 @@ namespace WhoIsFaster.BlazorApp.Pages {
                 await GameService.AddRoomToGame (roomResponse.RoomId);
             }
             Room = new RoomVM (await RoomService.GetRoomByUserNameAsync (userName));
-            ShowToastForOnePlayer = Room.IsStarting && !Room.HasStarted? false : true;
+            ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1? true : false;
             Username = userName;
             RoomPlayer = Room.RoomPlayers.FirstOrDefault (rp => rp.UserName == userName);
             hubConnection = new HubConnectionBuilder ()
