@@ -65,11 +65,12 @@ namespace WhoIsFaster.BlazorApp.Pages
             var roomResponse = await RoomService.CreateAndJoinPracticeRoomAsync(userName);
             await GameService.AddRoomToGame(roomResponse);
             Room = new RoomVM(await RoomService.GetRoomByUserNameAsync(userName));
-            ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1? true : false;
+            ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1 ? true : false;
             Username = userName;
             RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == userName);
             hubConnection = new HubConnectionBuilder()
-                .WithUrl(NavigationManager.ToAbsoluteUri("/whoIsFasterSignalRHub"), conf => {
+                .WithUrl(NavigationManager.ToAbsoluteUri("/whoIsFasterSignalRHub"), conf =>
+                {
                     conf.HttpMessageHandlerFactory = (x) => new HttpClientHandler
                     {
                         ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
@@ -77,7 +78,8 @@ namespace WhoIsFaster.BlazorApp.Pages
                 })
                 .Build();
 
-            hubConnection.On<string>("ReceiveRoom", (roomObject) => {
+            hubConnection.On<string>("ReceiveRoom", (roomObject) =>
+            {
                 RoomDTO room = JsonSerializer.Deserialize<RoomDTO>(roomObject);
                 Room = new RoomVM(room);
                 RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == Username);

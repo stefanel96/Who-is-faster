@@ -25,6 +25,6 @@
         <div class="d-flex w-100 justify-content-between">
             <h5 class="mb-1" style="text-align: center;">Words per minute:</h5> <span class="oi oi-code"></span>
         </div>
-        <p class="mb-1" style="color: gold; text-align:center; font-size: 24px;">@Model.RegularUser?.AverageWordsPerMinute</p>
+        <p class="mb-1" style="color: gold; text-align:center; font-size: 24px;">@Math.Round(Model.RegularUser == null ? 0.0: Model.RegularUser.AverageWordsPerMinute, 2)</p>
     </a>
 </div>

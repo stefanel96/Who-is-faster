@@ -71,7 +71,7 @@ namespace WhoIsFaster.BlazorApp.Pages
         public string JoinLink { get; set; }
         public bool EnableInitialize { get; set; } = false;
         protected override async Task OnInitializedAsync()
-        {   
+        {
             string userName = HttpContextAccessor.HttpContext.User.Identity.Name;
             int roomResponse;
             if (RoomId == null)
@@ -80,9 +80,9 @@ namespace WhoIsFaster.BlazorApp.Pages
                 await GameService.AddRoomToGame(roomResponse);
             }
             else
-            {   
-                var urlDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(RoomId)); 
-                var decrypted = StringCipher.Decrypt(urlDecoded,"gsdoifjdsoi");
+            {
+                var urlDecoded = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(RoomId));
+                var decrypted = StringCipher.Decrypt(urlDecoded, "gsdoifjdsoi");
                 int.TryParse(decrypted, out var roomId);
                 roomResponse = await RoomService.JoinPartyRoomAsync(userName, roomId);
             }
@@ -92,8 +92,9 @@ namespace WhoIsFaster.BlazorApp.Pages
             ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1 ? true : false;
             Username = userName;
             RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == userName);
-            if(RoomPlayer.IsRoomAdmin){
-                var encrypted = StringCipher.Encrypt(Room.Id+"","gsdoifjdsoi");
+            if (RoomPlayer.IsRoomAdmin)
+            {
+                var encrypted = StringCipher.Encrypt(Room.Id + "", "gsdoifjdsoi");
                 var urlEncoded = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(encrypted));
                 JoinLink = NavigationManager.Uri + "/" + urlEncoded;
                 JoinLink = HtmlEncoder.Default.Encode(JoinLink);
@@ -182,7 +183,8 @@ namespace WhoIsFaster.BlazorApp.Pages
             return "";
         }
 
-        public async void CopyToClipboard(){
+        public async void CopyToClipboard()
+        {
             await JSRuntime.InvokeVoidAsync("clipboardCopy.copyText", JoinLink);
         }
 

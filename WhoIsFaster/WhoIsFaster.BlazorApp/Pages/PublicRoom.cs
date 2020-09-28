@@ -14,8 +14,10 @@ using WhoIsFaster.BlazorApp.GameServices;
 using WhoIsFaster.BlazorApp.ViewModels;
 using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfaces;
 
-namespace WhoIsFaster.BlazorApp.Pages {
-    public partial class PublicRoom : IAsyncDisposable {
+namespace WhoIsFaster.BlazorApp.Pages
+{
+    public partial class PublicRoom : IAsyncDisposable
+    {
         public string Title { get; set; } = "Public Room";
 
         [Inject]
@@ -53,76 +55,91 @@ namespace WhoIsFaster.BlazorApp.Pages {
 
         public bool EndOfText { get; set; }
         public int ChangeDurationOfToast { get; set; }
-        protected override async Task OnInitializedAsync () {
+        protected override async Task OnInitializedAsync()
+        {
             ChangeDurationOfToast = 5;
             ShowToastForStartingGame = true;
             string userName = HttpContextAccessor.HttpContext.User.Identity.Name;
-            var roomResponse = await RoomService.JoinOrCreateRoomAsync (userName);
-            if (roomResponse.IsNew) {
-                await GameService.AddRoomToGame (roomResponse.RoomId);
+            var roomResponse = await RoomService.JoinOrCreateRoomAsync(userName);
+            if (roomResponse.IsNew)
+            {
+                await GameService.AddRoomToGame(roomResponse.RoomId);
             }
-            Room = new RoomVM (await RoomService.GetRoomByUserNameAsync (userName));
-            ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1? true : false;
+            Room = new RoomVM(await RoomService.GetRoomByUserNameAsync(userName));
+            ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1 ? true : false;
             Username = userName;
-            RoomPlayer = Room.RoomPlayers.FirstOrDefault (rp => rp.UserName == userName);
-            hubConnection = new HubConnectionBuilder ()
-                .WithUrl (NavigationManager.ToAbsoluteUri ("/whoIsFasterSignalRHub"), conf => {
-                    conf.HttpMessageHandlerFactory = (x) => new HttpClientHandler {
-                    ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
+            RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == userName);
+            hubConnection = new HubConnectionBuilder()
+                .WithUrl(NavigationManager.ToAbsoluteUri("/whoIsFasterSignalRHub"), conf =>
+                {
+                    conf.HttpMessageHandlerFactory = (x) => new HttpClientHandler
+                    {
+                        ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator,
                     };
                 })
-                .Build ();
+                .Build();
 
-            hubConnection.On<string> ("ReceiveRoom", (roomObject) => {
-                RoomDTO room = JsonSerializer.Deserialize<RoomDTO> (roomObject);
-                Room = new RoomVM (room);
-                RoomPlayer = Room.RoomPlayers.FirstOrDefault (rp => rp.UserName == Username);
-                if (Room.HasFinished) {
-                    hubConnection.DisposeAsync ();
+            hubConnection.On<string>("ReceiveRoom", (roomObject) =>
+            {
+                RoomDTO room = JsonSerializer.Deserialize<RoomDTO>(roomObject);
+                Room = new RoomVM(room);
+                RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == Username);
+                if (Room.HasFinished)
+                {
+                    hubConnection.DisposeAsync();
                 }
-                StateHasChanged ();
+                StateHasChanged();
             });
 
-            await hubConnection.StartAsync ();
+            await hubConnection.StartAsync();
 
-            await EventService.AddConnectionToSignalRGroup (hubConnection.ConnectionId, Room.Id.ToString ());
+            await EventService.AddConnectionToSignalRGroup(hubConnection.ConnectionId, Room.Id.ToString());
 
         }
 
-        public double EndingRoomSecondsReverse(){
-            return Math.Round(Room.GameLengthSeconds + (Room.StartEventTime-DateTime.Now).TotalSeconds + Room.LengthOfStarting);
+        public double EndingRoomSecondsReverse()
+        {
+            return Math.Round(Room.GameLengthSeconds + (Room.StartEventTime - DateTime.Now).TotalSeconds + Room.LengthOfStarting);
         }
 
-        public int EndingRoomPercentage(){
-            return (int)((Math.Round((DateTime.Now-Room.StartEventTime).TotalSeconds - Room.LengthOfStarting)/Room.GameLengthSeconds)*100);
+        public int EndingRoomPercentage()
+        {
+            return (int)((Math.Round((DateTime.Now - Room.StartEventTime).TotalSeconds - Room.LengthOfStarting) / Room.GameLengthSeconds) * 100);
         }
 
-        public int EndingRoomPercentageReverse(){
-            return (int)((Math.Round(Room.GameLengthSeconds + (Room.StartEventTime-DateTime.Now).TotalSeconds + Room.LengthOfStarting)/Room.GameLengthSeconds)*100);
+        public int EndingRoomPercentageReverse()
+        {
+            return (int)((Math.Round(Room.GameLengthSeconds + (Room.StartEventTime - DateTime.Now).TotalSeconds + Room.LengthOfStarting) / Room.GameLengthSeconds) * 100);
         }
 
-        public void OnInput () {
-            CorrectWordIndex = GetCorrectlyTypedIndexOfWord ();
-            IncorrectWordIndex = Input.Trim ().Length > CorrectWordIndex ? Input.Trim ().Length : CorrectWordIndex;
-            if (this.RoomPlayer.CurrentWord == this.Input.Trim () && Input[Input.Length - 1] == ' ') {
-                GameService.UpdateRoomPlayerInput (Room.Id, RoomPlayer.UserName, Input);
+        public void OnInput()
+        {
+            CorrectWordIndex = GetCorrectlyTypedIndexOfWord();
+            IncorrectWordIndex = Input.Trim().Length > CorrectWordIndex ? Input.Trim().Length : CorrectWordIndex;
+            if (this.RoomPlayer.CurrentWord == this.Input.Trim() && Input[Input.Length - 1] == ' ')
+            {
+                GameService.UpdateRoomPlayerInput(Room.Id, RoomPlayer.UserName, Input);
                 CurrentTextIndex += this.Input.Length;
                 Input = "";
                 CorrectWordIndex = 0;
                 IncorrectWordIndex = 0;
-                if (this.RoomPlayer.CurrentWord == Room.WordList[Room.WordList.Count - 1]) {
+                if (this.RoomPlayer.CurrentWord == Room.WordList[Room.WordList.Count - 1])
+                {
                     CurrentTextIndex -= 1;
                     EndOfText = true;
                 }
             }
         }
 
-        public async Task StartRoom () {
-            await RoomService.StartRoom (Room.Id);
+        public async Task StartRoom()
+        {
+            await RoomService.StartRoom(Room.Id);
         }
 
-        public string addBGColor (int index) {
-            switch (index) {
+        public string addBGColor(int index)
+        {
+            switch (index)
+            {
                 case 1:
                     return "bg-success";
                 case 2:
@@ -133,19 +150,22 @@ namespace WhoIsFaster.BlazorApp.Pages {
 
             return "";
         }
-        private int GetCorrectlyTypedIndexOfWord () {
+        private int GetCorrectlyTypedIndexOfWord()
+        {
             int n = RoomPlayer.CurrentWord.Length;
-            int m = Input.Trim ().Length;
+            int m = Input.Trim().Length;
             int i;
-            for (i = 0; i < Math.Min (n, m); i++) {
+            for (i = 0; i < Math.Min(n, m); i++)
+            {
                 if (RoomPlayer.CurrentWord[i] != Input[i])
                     break;
             }
             return i;
         }
 
-        public async ValueTask DisposeAsync () {
-            await hubConnection.DisposeAsync ();
+        public async ValueTask DisposeAsync()
+        {
+            await hubConnection.DisposeAsync();
         }
 
     }
