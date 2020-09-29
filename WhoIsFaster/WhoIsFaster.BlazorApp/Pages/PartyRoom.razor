@@ -87,8 +87,8 @@ else
     {
         <div class="container" style="margin-bottom: 20px;">
             <div class="progress" style="background-color: #222222;">
-                <div class="progress-bar progress-bar-striped @addBGColor(i) progress-bar-animated" role="progressbar" style="width: @(HttpContextAccessor.HttpContext.User.Identity.Name == Room.RoomPlayers.ElementAt(i).UserName ? Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length), 2) * 100 : Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@(Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)" aria-valuemax="100">
-                    @(Room.RoomPlayers.ElementAt(i).UserName + " " + (HttpContextAccessor.HttpContext.User.Identity.Name == Room.RoomPlayers.ElementAt(i).UserName ? (int)(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length) * 100) : ((int)(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length) * 100))) + "%")
+                <div class="progress-bar progress-bar-striped @addBGColor(i) progress-bar-animated" role="progressbar" style="width: @(RoomPlayer.UserName == Room.RoomPlayers.ElementAt(i).UserName ? Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length), 2) * 100 : Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@(Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)" aria-valuemax="100">
+                    @(Room.RoomPlayers.ElementAt(i).UserName + " " + (RoomPlayer.UserName == Room.RoomPlayers.ElementAt(i).UserName ? (int)(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length) * 100) : ((int)(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length) * 100))) + "%")
                 </div>
             </div>
         </div>
@@ -115,7 +115,7 @@ else
             <div class="input-group-prepend">
                 <span class="input-group-text" id="">Type here</span>
             </div>
-            <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input = (string)e.Value; OnInput(); })">
+            <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText || RoomPlayer.IsDone)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input = (string)e.Value; OnInput(); })">
         </div>
         @if (RoomPlayer.IsRoomAdmin)
         {
@@ -129,7 +129,9 @@ else
                 <div class="col-1">
                     <button type="button" @onclick="@CopyToClipboard" class="btn btn-success">Copy</button>
                 </div>
-                <div class="col-8"></div>
+                <div class="col-8">
+                    <button disabled="@(Room.HasStarted || Room.IsStarting)" type="button" class="btn btn-danger" @onclick="@LeaveRoom">Leave room</button>
+                </div>
             </div>
         }
 

@@ -8,6 +8,7 @@ namespace WhoIsFaster.Domain.Interfaces.Repositories {
     public interface IRoomRepository {
         Task AddRoomAsync (Room room);
         Task DeleteAsync (int id);
+        Task HardDeleteAsync(int id);
         Task<Room> GetByIdAsync (int id);
         Task<Room> SecureGetByIdAsync(int id);
         Task<List<Room>> GetAllNotStartedPublicRooms();

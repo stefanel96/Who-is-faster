@@ -13,6 +13,7 @@ namespace WhoIsFaster.ApplicationServices.DTOs
         public string CurrentWord { get; set; }
         public string CurrentInput { get; set; }
         public bool HasWon { get; set; }
+        public bool IsDone { get; set; }
         public bool IsRoomAdmin { get; set; }
 
         public RoomPlayerDTO()
@@ -31,6 +32,7 @@ namespace WhoIsFaster.ApplicationServices.DTOs
             CurrentWord = roomPlayer.CurrentWord;
             CurrentInput = roomPlayer.CurrentInput;
             HasWon = roomPlayer.HasWon;
+            IsDone = roomPlayer.IsDone;
             IsRoomAdmin = roomPlayer.IsRoomAdmin;
         }
     }

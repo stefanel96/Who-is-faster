@@ -80,7 +80,7 @@ else
     <div class="container" style="margin-bottom: 20px;">
         <div class="progress" style="background-color: #222222;">
             <div class="progress-bar progress-bar-striped bg-danger progress-bar-animated" role="progressbar" style="width: @((int)(Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length),2)*100))%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@((int)(Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length),2)*100))" aria-valuemax="100">
-                @(HttpContextAccessor.HttpContext.User.Identity.Name +" "+ (int)(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length)*100)+"%")
+                @(RoomPlayer.UserName +" "+ (int)(((float)(Room.Text.TextContent[..(CurrentTextIndex+CorrectWordIndex)].Length)/Room.Text.TextContent.Trim().Length)*100)+"%")
             </div>
         </div>
     </div>
@@ -104,7 +104,7 @@ else
             <div class="input-group-prepend">
                 <span class="input-group-text" id="">Type here</span>
             </div>
-            <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input=(string)e.Value; OnInput(); })">
+            <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText || RoomPlayer.IsDone)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input=(string)e.Value; OnInput(); })">
         </div>
         @if (!Room.HasStarted || !Room.IsStarting)
         {

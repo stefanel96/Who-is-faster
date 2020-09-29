@@ -6,12 +6,12 @@ namespace WhoIsFaster.ApplicationServices.DTOs
 {
     public class RoomResponseDTO
     {
-        public int RoomId { get; set; }
+        public RoomDTO Room { get; set; }
         public bool IsNew { get; set; }
 
-        public RoomResponseDTO(int roomId, bool isNew)
+        public RoomResponseDTO(RoomDTO room, bool isNew)
         {
-            RoomId = roomId;
+            Room = room;
             IsNew = isNew;
         }
     }

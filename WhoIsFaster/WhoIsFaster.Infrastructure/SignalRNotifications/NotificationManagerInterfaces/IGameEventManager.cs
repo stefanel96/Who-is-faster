@@ -12,6 +12,8 @@ namespace WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInt
         Task AddConnectionToGroup(string connectionId, string groupName);
 
         Task SendRoomInfoToGroup(string groupName, string roomObject);
+
+        Task SendLeaveRoomSignalToGroup(string groupName);
     }
 }
 

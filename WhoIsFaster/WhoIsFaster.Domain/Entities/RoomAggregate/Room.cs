@@ -14,7 +14,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         public bool HasStarted { get; private set; }
         public bool IsStarting { get; private set; }
         public bool HasFinished { get; private set; }
-
+        public bool IsRemoved { get; private set; }
         public int MaxPlayers { get; private set; }
         public int PlayersToStart { get; private set; }
 
@@ -48,6 +48,7 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
             HasStarted = false;
             HasFinished = false;
             IsDeleted = false;
+            IsRemoved = false;
         }
 
         public void UpdateRoom(Room room)
@@ -93,6 +94,11 @@ namespace WhoIsFaster.Domain.Entities.RoomAggregate
         {
             IsStarting = true;
             StartEventTime = DateTime.Now;
+        }
+
+        public void LeaveRoom()
+        {
+            IsRemoved = true;
         }
 
 

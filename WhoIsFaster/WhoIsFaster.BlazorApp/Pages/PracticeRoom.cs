@@ -12,6 +12,7 @@ using WhoIsFaster.ApplicationServices.Interfaces;
 using WhoIsFaster.BlazorApp.EventServices;
 using WhoIsFaster.BlazorApp.GameServices;
 using WhoIsFaster.BlazorApp.ViewModels;
+using WhoIsFaster.Domain.Entities.RoomAggregate;
 using WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagerInterfaces;
 
 namespace WhoIsFaster.BlazorApp.Pages
@@ -63,8 +64,25 @@ namespace WhoIsFaster.BlazorApp.Pages
             ShowToastForStartingGame = true;
             string userName = HttpContextAccessor.HttpContext.User.Identity.Name;
             var roomResponse = await RoomService.CreateAndJoinPracticeRoomAsync(userName);
-            await GameService.AddRoomToGame(roomResponse);
-            Room = new RoomVM(await RoomService.GetRoomByUserNameAsync(userName));
+            if (roomResponse.IsNew)
+            {
+                await GameService.AddRoomToGame(roomResponse.Room.Id);
+            }
+            else
+            {
+                if (roomResponse.Room.RoomType != RoomType.Practice.ToString())
+                {
+                    if (roomResponse.Room.RoomType == RoomType.Party.ToString())
+                    {
+                        NavigationManager.NavigateTo("/party");
+                    }
+                    else
+                    {
+                        NavigationManager.NavigateTo("/room");
+                    }
+                }
+            }
+            Room = new RoomVM(roomResponse.Room);
             ShowToastForOnePlayer = Room.RoomPlayers.Count() == 1 ? true : false;
             Username = userName;
             RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == userName);
@@ -81,13 +99,22 @@ namespace WhoIsFaster.BlazorApp.Pages
             hubConnection.On<string>("ReceiveRoom", (roomObject) =>
             {
                 RoomDTO room = JsonSerializer.Deserialize<RoomDTO>(roomObject);
-                Room = new RoomVM(room);
-                RoomPlayer = Room.RoomPlayers.FirstOrDefault(rp => rp.UserName == Username);
-                if (Room.HasFinished)
+                var player = room.RoomPlayers.FirstOrDefault(rp => rp.UserName == Username);
+
+                if (player != null)
                 {
-                    hubConnection.DisposeAsync();
+                    Room = new RoomVM(room);
+                    RoomPlayer = new RoomPlayerVM(player);
+                    if (Room.HasFinished)
+                    {
+                        hubConnection.DisposeAsync();
+                    }
+                    if (CurrentTextIndex == 0)
+                    {
+                        CurrentTextIndex = RoomPlayer.CurrentTextIndex;
+                    }
+                    StateHasChanged();
                 }
-                StateHasChanged();
             });
 
             await hubConnection.StartAsync();

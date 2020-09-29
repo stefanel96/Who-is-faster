@@ -31,6 +31,15 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             }
         }
 
+        public async Task HardDeleteAsync(int id)
+        {
+            var room = await GetByIdAsync(id);
+            if (room != null)
+            {
+                whoIsFasterDbContext.Rooms.Remove(room);
+            }
+        }
+
         public async Task<List<Room>> GetAllNotStartedPublicRooms()
         {
             //TODO - SetWordList
@@ -47,6 +56,7 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
                 .FirstOrDefaultAsync(r => r.Id == id);
             if (room != null)
             {
+                await whoIsFasterDbContext.Entry(room).ReloadAsync();
                 room.SetWordList();
             }
             return room;
@@ -60,6 +70,7 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
             await whoIsFasterDbContext.Entry(room).ReloadAsync();
             if (room != null)
             {
+                await whoIsFasterDbContext.Entry(room).ReloadAsync();
                 room.SetWordList();
             }
             return room;
@@ -74,6 +85,7 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
                            .FirstOrDefaultAsync();
             if (room != null)
             {
+                await whoIsFasterDbContext.Entry(room).ReloadAsync();
                 room.SetWordList();
             }
             return room;
@@ -94,9 +106,10 @@ namespace WhoIsFaster.Infrastructure.Data.Persistance.Respositories
                             .FirstOrDefaultAsync();
             if (room != null)
             {
+                await whoIsFasterDbContext.Entry(room).ReloadAsync();
                 room.SetWordList();
             }
-            
+
             return room;
         }
     }

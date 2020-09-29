@@ -17,15 +17,22 @@ namespace WhoIsFaster.ApplicationServices.Services
         {
             _unitOfWork = unitOfWork;
         }
-        public async Task<int> CreateAndJoinPartyRoomAsync(string userName)
+        public async Task<RoomResponseDTO> CreateAndJoinPartyRoomAsync(string userName)
         {
             RegularUser regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
+            Room room;
+            var isNew = false;
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");
             }
             if (regularUser.IsInRoom)
             {
+                room = await _unitOfWork.RoomRepository.GetJoinedRoomForUserName(userName);
+                if (room != null)
+                {
+                    return new RoomResponseDTO(new RoomDTO(room), isNew);
+                }
                 throw new WhoIsFasterException($"User with username {userName} is already in a room.");
             }
 
@@ -35,17 +42,21 @@ namespace WhoIsFaster.ApplicationServices.Services
                 throw new WhoIsFasterException($"There are no texts in the database.");
             }
 
-            var room = new Room(4, 2, text, 1200, 5, RoomType.Party);
+            room = new Room(4, 2, text, 120, 5, RoomType.Party);
+            isNew = true;
             room.PlayerJoin(regularUser);
 
 
             await _unitOfWork.RoomRepository.AddRoomAsync(room);
-
-            regularUser.JoinRoom(room.Id);
-
             await _unitOfWork.SaveChangesAsync();
 
-            return room.Id;
+            if (room != null)
+            {
+                regularUser.JoinRoom(room.Id);
+                await _unitOfWork.SaveChangesAsync();
+            }
+
+            return new RoomResponseDTO(new RoomDTO(room), isNew);
         }
 
         public async Task StartRoom(int id)
@@ -60,15 +71,38 @@ namespace WhoIsFaster.ApplicationServices.Services
             await _unitOfWork.SaveChangesAsync();
         }
 
-        public async Task<int> CreateAndJoinPracticeRoomAsync(string userName)
+
+        public async Task LeavePartyRoom(int id)
+        {
+            Room room = await _unitOfWork.RoomRepository.GetByIdAsync(id);
+            if (room == null)
+            {
+                throw new WhoIsFasterException($"Room with ID {id} doesn't exist.");
+            }
+
+            if (!room.IsStarting && !room.HasStarted)
+            {
+                room.LeaveRoom();
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public async Task<RoomResponseDTO> CreateAndJoinPracticeRoomAsync(string userName)
         {
             RegularUser regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
+            Room room;
+            var isNew = false;
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");
             }
             if (regularUser.IsInRoom)
             {
+                room = await _unitOfWork.RoomRepository.GetJoinedRoomForUserName(userName);
+                if (room != null)
+                {
+                    return new RoomResponseDTO(new RoomDTO(room), isNew);
+                }
                 throw new WhoIsFasterException($"User with username {userName} is already in a room.");
             }
 
@@ -79,16 +113,19 @@ namespace WhoIsFaster.ApplicationServices.Services
             }
 
 
-            var room = new Room(1, 1, text, 1200, 5, RoomType.Practice);
+            room = new Room(1, 1, text, 120, 5, RoomType.Practice);
+            isNew = true;
             room.PlayerJoin(regularUser);
 
             await _unitOfWork.RoomRepository.AddRoomAsync(room);
+                
+            await _unitOfWork.SaveChangesAsync();
 
             regularUser.JoinRoom(room.Id);
 
             await _unitOfWork.SaveChangesAsync();
 
-            return room.Id;
+            return new RoomResponseDTO(new RoomDTO(room), isNew);
 
         }
 
@@ -118,16 +155,22 @@ namespace WhoIsFaster.ApplicationServices.Services
         {
             RegularUser regularUser = await _unitOfWork.RegularUserRepository.SecureGetByUserNameAsync(userName);
             bool isNew = false;
+            Room room;
             if (regularUser == null)
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");
             }
             if (regularUser.IsInRoom)
             {
+                room = await _unitOfWork.RoomRepository.GetJoinedRoomForUserName(userName);
+                if (room != null)
+                {
+                    return new RoomResponseDTO(new RoomDTO(room), isNew);
+                }
                 throw new WhoIsFasterException($"User with username {userName} is already in a room.");
             }
 
-            Room room = await _unitOfWork.RoomRepository.GetRandomNotStartedJoinablePublicRoom();
+            room = await _unitOfWork.RoomRepository.GetRandomNotStartedJoinablePublicRoom();
             if (room == null)
             {
                 Text text = await _unitOfWork.TextRepository.GetRandomTextAsync();
@@ -136,7 +179,7 @@ namespace WhoIsFaster.ApplicationServices.Services
                     throw new WhoIsFasterException($"There are no texts in the database.");
                 }
 
-                room = new Room(4, 2, text, 1200, 5, RoomType.Public);
+                room = new Room(4, 2, text, 120, 5, RoomType.Public);
                 await _unitOfWork.RoomRepository.AddRoomAsync(room);
                 isNew = true;
             }
@@ -150,11 +193,11 @@ namespace WhoIsFaster.ApplicationServices.Services
                 await _unitOfWork.SaveChangesAsync();
             }
 
-            return new RoomResponseDTO(room.Id, isNew);
+            return new RoomResponseDTO(new RoomDTO(room), isNew);
 
         }
 
-        public async Task<int> JoinPartyRoomAsync(string userName, int roomId)
+        public async Task<RoomResponseDTO> JoinPartyRoomAsync(string userName, int roomId)
         {
             Room room = await _unitOfWork.RoomRepository.GetByIdAsync(roomId);
             if (room == null)
@@ -167,16 +210,26 @@ namespace WhoIsFaster.ApplicationServices.Services
             {
                 throw new WhoIsFasterException($"User with username {userName} doesn't exist.");
             }
+            if (room.RoomType != RoomType.Party)
+            {
+                return new RoomResponseDTO(new RoomDTO(room), false);
+            }
             if (regularUser.IsInRoom)
             {
+                if (regularUser.CurrentRoomId == roomId)
+                {
+                    return new RoomResponseDTO(new RoomDTO(room), false);
+                }
                 throw new WhoIsFasterException($"User with username {userName} is already in a room.");
             }
 
 
             room.PlayerJoin(regularUser);
+
             regularUser.JoinRoom(room.Id);
             await _unitOfWork.SaveChangesAsync();
-            return room.Id;
+
+            return new RoomResponseDTO(new RoomDTO(room), false);
         }
 
     }

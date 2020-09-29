@@ -13,6 +13,7 @@ namespace WhoIsFaster.BlazorApp.ViewModels
         public string CurrentWord { get; private set; }
         public string CurrentInput { get; private set; }
         public bool HasWon { get; private set; }
+        public bool IsDone { get; set; }
         public bool IsRoomAdmin { get; private set; }
 
 
@@ -27,6 +28,7 @@ namespace WhoIsFaster.BlazorApp.ViewModels
             CurrentWord = roomPlayer.CurrentWord;
             CurrentInput = roomPlayer.CurrentInput;
             HasWon = roomPlayer.HasWon;
+            IsDone = roomPlayer.IsDone;
             IsRoomAdmin = roomPlayer.IsRoomAdmin;
         }
     }

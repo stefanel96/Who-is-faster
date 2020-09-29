@@ -27,6 +27,11 @@ namespace WhoIsFaster.Infrastructure.SignalRNotifications.NotificationManagers
             await _hubContext.Clients.All.SendAsync("ReceiveMessage", user, message);
         }
 
+        public async Task SendLeaveRoomSignalToGroup(string groupName)
+        {
+            await _hubContext.Clients.Group(groupName).SendAsync("LeaveRoom", "Leave room");
+        }
+
         public async Task SendRoomInfoToGroup(string groupName, string roomObject)
         {
             await _hubContext.Clients.Group(groupName).SendAsync("ReceiveRoom", roomObject);

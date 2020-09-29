@@ -99,7 +99,10 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
                 foreach (RoomPlayer roomPlayer in savedRoom.RoomPlayers)
                 {
                     regularUser = await unitOfWork.RegularUserRepository.GetByIdAsync(roomPlayer.RegularUserId);
-                    regularUser.UpdatePlayerStats(roomPlayer.WordsPerMinute, roomPlayer.HasWon);
+                    if (room.RoomType != RoomType.Practice)
+                    {
+                        regularUser.UpdatePlayerStats(roomPlayer.WordsPerMinute, roomPlayer.HasWon);
+                    }
                     regularUser.LeaveRoom();
                     string value;
                     Players.TryRemove(roomPlayer.UserName, out value);
@@ -134,6 +137,21 @@ namespace WhoIsFaster.BlazorApp.GameDefinitions
             using (IUnitOfWork unitOfWork = _serviceProvider.CreateScope().ServiceProvider.GetService<IUnitOfWork>())
             {
                 Room savedRoom = await unitOfWork.RoomRepository.SecureGetByIdAsync(room.Id);
+                if (savedRoom.IsRemoved)
+                {
+                    RegularUser regularUser;
+                    foreach (RoomPlayer roomPlayer in savedRoom.RoomPlayers)
+                    {
+                        regularUser = await unitOfWork.RegularUserRepository.GetByIdAsync(roomPlayer.RegularUserId);
+                        regularUser.LeaveRoom();
+                        string value;
+                        Players.TryRemove(roomPlayer.UserName, out value);
+                    }
+                    await _notificationManager.SendLeaveRoomSignalToGroup(room.Id.ToString());
+                    await unitOfWork.RoomRepository.HardDeleteAsync(savedRoom.Id);
+                    await unitOfWork.SaveChangesAsync();
+                    return null;
+                }
                 await _notificationManager.SendRoomInfoToGroup(room.Id.ToString(), JsonSerializer.Serialize(new RoomDTO(room)));
                 if (savedRoom.ShouldStart())
                 {
