@@ -71,6 +71,9 @@ namespace WhoIsFaster.BlazorApp.Pages
         public bool DisableStartButton { get; set; }
         public string JoinLink { get; set; }
         public bool EnableInitialize { get; set; } = false;
+        
+        public ElementReference MainInput { get; set; }
+        
         protected override async Task OnInitializedAsync()
         {
             string userName = HttpContextAccessor.HttpContext.User.Identity.Name;
@@ -214,6 +217,10 @@ namespace WhoIsFaster.BlazorApp.Pages
         public async Task LeaveRoom()
         {
             await RoomService.LeavePartyRoom(Room.Id);
+        }
+
+        public async void FocusInput(){
+            await JSRuntime.InvokeVoidAsync("BlazorFocusElement.focusInput", MainInput);
         }
 
         public string addBGColor(int index)

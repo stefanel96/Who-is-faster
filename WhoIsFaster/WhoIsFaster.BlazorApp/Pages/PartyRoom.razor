@@ -17,38 +17,48 @@ else
     <div class="container" style="margin-bottom: 50px;">
         <div class="row">
 
-            <div class="col-8">
+            <div class="col-7">
                 <h3 class="text-primary">live results: </h3>
             </div>
-            <div class="col-4">
-                @if (Room.HasStarted)
-                {
-
-                    @if (EndingRoomPercentageReverse() >= 1 && EndingRoomPercentageReverse() <= 30)
-                    {
-                        <p class="text-primary" style="font-size: 20px;">
-                            Game duration:
-                            <span class="blinking" style="font-size: 20px;">@(EndingRoomSecondsReverse())s</span>
-                        </p>
-                        <div class="progress" style="height: 2px; background-color: #222222;">
-                            <div class="progress-bar bg-danger" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    }
-                    else
-                    {
-                        <p class="text-primary" style="font-size: 20px;">
-                            Game duration:
-                            <span>@(EndingRoomSecondsReverse() == -0 ? 0 : EndingRoomSecondsReverse())s</span>
-                        </p>
-                        <div class="progress" style="height: 2px; background-color: #222222;">
-                            <div class="progress-bar" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
-                        </div>
-                    }
-                }
+            @if (Room.HasStarted)
+            {
+                <div class="col-1 text-primary">
+                    WPM @RoomPlayer.WordsPerMinute
+                </div>
+                <div class="col-4">
+                    
+                        @if (EndingRoomPercentageReverse() >= 1 && EndingRoomPercentageReverse() <= 30)
+                        {
+                            <p class="text-primary" style="font-size: 20px;">
+                                Game duration:
+                                <span class="blinking" style="font-size: 20px;">@(EndingRoomSecondsReverse())s</span>
+                            </p>
+                            <div class="progress" style="height: 2px; background-color: #222222;">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-primary" style="font-size: 20px;">
+                                Game duration:
+                                <span>@(EndingRoomSecondsReverse() == -0 ? 0 : EndingRoomSecondsReverse())s</span>
+                            </p>
+                            <div class="progress" style="height: 2px; background-color: #222222;">
+                                <div class="progress-bar" role="progressbar" style="width:@(EndingRoomPercentageReverse())%;" aria-valuenow="@(EndingRoomPercentageReverse())" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        }
+                </div>
+                
+            }
+        </div>
+    </div>
+    @if(RoomPlayer.HasWon){
+        <div class="container">
+            <div class="alert alert-success" role="alert">
+                You're first! Congratulation!! 
             </div>
         </div>
-
-    </div>
+    }
     @if (ShowToastForOnePlayer && !Room.IsStarting && !Room.HasStarted)
     {
 
@@ -77,6 +87,7 @@ else
             {
                 ChangeDurationOfToast = 3;
                 ToastService.ShowSuccess("Type As Fast As You Can!!", "Start");
+                @* FocusInput(); *@
             }
         }
 
@@ -87,7 +98,7 @@ else
     {
         <div class="container" style="margin-bottom: 20px;">
             <div class="progress" style="background-color: #222222;">
-                <div class="progress-bar progress-bar-striped @addBGColor(i) progress-bar-animated" role="progressbar" style="width: @(RoomPlayer.UserName == Room.RoomPlayers.ElementAt(i).UserName ? Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length), 2) * 100 : Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@(Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100)" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped @addBGColor(i) progress-bar-animated" role="progressbar" style="width: @(RoomPlayer.UserName == Room.RoomPlayers.ElementAt(i).UserName ? (int)(Math.Round(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length), 2) * 100) : (int)(Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100))%; font-size: 20px;" aria-valuemin="0" aria-valuenow="@((int)(Math.Round(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length), 2) * 100))" aria-valuemax="100">
                     @(Room.RoomPlayers.ElementAt(i).UserName + " " + (RoomPlayer.UserName == Room.RoomPlayers.ElementAt(i).UserName ? (int)(((float)(Room.Text.TextContent[..(CurrentTextIndex + CorrectWordIndex)].Length) / Room.Text.TextContent.Trim().Length) * 100) : ((int)(((float)(Room.RoomPlayers.ElementAt(i).CorrectlyTypedTextIndex) / Room.Text.TextContent.Trim().Length) * 100))) + "%")
                 </div>
             </div>
@@ -115,7 +126,7 @@ else
             <div class="input-group-prepend">
                 <span class="input-group-text" id="">Type here</span>
             </div>
-            <input disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText || RoomPlayer.IsDone)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input = (string)e.Value; OnInput(); })">
+            <input @ref="MainInput" disabled="@(!Room.HasStarted || Room.HasFinished || EndOfText || RoomPlayer.IsDone)" type="text" class="form-control" @bind-value="Input" @oninput="@((e) => { Input = (string)e.Value; OnInput(); })">
         </div>
         @if (RoomPlayer.IsRoomAdmin)
         {
@@ -126,10 +137,12 @@ else
                         <button disabled="@(DisableStartButton || Room.RoomPlayers.Count() == 1)" type="button" class="btn btn-success" @onclick="@StartRoom">START</button>
                     </div>
                 }
-                <div class="col-1">
-                    <button type="button" @onclick="@CopyToClipboard" class="btn btn-success">Copy</button>
+                <div class="col-2">
+                    <button type="button" @onclick="@CopyToClipboard" class="btn btn-success">Copy URL</button>
                 </div>
-                <div class="col-8">
+                <div class="col-7">
+                </div>
+                <div class="col-2">
                     <button disabled="@(Room.HasStarted || Room.IsStarting)" type="button" class="btn btn-danger" @onclick="@LeaveRoom">Leave room</button>
                 </div>
             </div>
